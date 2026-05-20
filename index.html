@@ -4,347 +4,1606 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Campus Cuts — Slot Exchange</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
-/* ── Reset ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html, body {
-  background: #090909;
-  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  min-height: 100vh;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;--s1:#101010;--s2:#161616;--s3:#1c1c1c;
+  --bd:#222;--bd2:#2a2a2a;
+  --t1:#f0f0f0;--t2:#888;--t3:#444;--t4:#2a2a2a;
+  --blue:#3b82f6;--bludk:#1d4ed8;--blubg:#0f1c38;
+  --green:#22c55e;--grnbg:#0b1c0b;
+  --amber:#f59e0b;--ambg:#1d1300;
+  --red:#f87171;--rdbg:#1a0808;
+  --acc:#a78bfa;--acbg:#1a1028;
+  --pink:#f472b6;--pkbg:#1a0a14;
 }
-
-body {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding: 24px 12px 40px;
-}
+html,body{background:var(--bg);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;min-height:100vh}
+body{display:flex;justify-content:center;align-items:flex-start;padding:20px 12px 40px}
 
 /* ── Phone shell ── */
-.phone {
-  background: #111;
-  border: 1.5px solid #1e1e1e;
-  border-radius: 40px;
-  width: 100%;
-  max-width: 390px;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-  min-height: 640px;
-}
+.phone{background:var(--s1);border:1.5px solid #1a1a1a;border-radius:44px;
+  width:100%;max-width:393px;display:flex;flex-direction:column;overflow:hidden;
+  position:relative;min-height:700px;box-shadow:0 40px 120px rgba(0,0,0,.75),0 0 0 1px #111}
+.notch{height:12px;background:var(--s1);display:flex;align-items:center;justify-content:center;padding-top:4px;flex-shrink:0}
+.notch-pill{width:80px;height:6px;background:#1a1a1a;border-radius:4px}
+.screen{flex:1;overflow-y:auto;scroll-behavior:smooth;position:relative;-webkit-overflow-scrolling:touch}
+.screen::-webkit-scrollbar{display:none}
 
-/* ── Screen ── */
-.screen {
-  flex: 1;
-  overflow-y: auto;
-  scroll-behavior: smooth;
-  position: relative;
-}
-.screen::-webkit-scrollbar { display: none; }
+/* ── Topbar ── */
+.topbar{display:flex;align-items:flex-start;justify-content:space-between;padding:22px 20px 0;margin-bottom:18px}
+.topbar-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--t1);letter-spacing:-.5px}
+.topbar-sub{font-size:11px;color:var(--t3);margin-top:3px;font-weight:500}
+.icon-btn{width:34px;height:34px;background:transparent;border:1px solid var(--bd);border-radius:10px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--t3);position:relative}
+.icon-btn:hover{background:var(--s3);border-color:var(--bd2);color:var(--t2)}
+.notif-dot{position:absolute;top:5px;right:5px;width:8px;height:8px;border-radius:50%;
+  background:var(--red);border:2px solid var(--s1);animation:pulse 2s infinite}
 
-/* ── Top bar ── */
-.topbar {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 28px 20px 0;
-  margin-bottom: 20px;
-}
-.topbar-title { font-size: 21px; font-weight: 700; color: #fff; letter-spacing: -0.4px; }
-.topbar-sub   { font-size: 11px; color: #444; margin-top: 3px; }
+/* ── Live pill ── */
+.live-pill{display:inline-flex;align-items:center;gap:5px;background:var(--grnbg);border:1px solid #22c55e22;
+  color:var(--green);font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
-.live-pill {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: #0f1f0f; border: 1px solid #39ff6e22;
-  color: #39ff6e; font-size: 11px; font-weight: 700;
-  padding: 5px 11px; border-radius: 20px; white-space: nowrap;
-}
-.ldot { width: 6px; height: 6px; border-radius: 50%; background: #39ff6e; }
+/* ── Avatar ── */
+.av{border-radius:50%;background:linear-gradient(135deg,#1e3a5f,#0d1c30);border:1px solid #1a3355;
+  color:#60a5fa;font-weight:700;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-family:'Syne',sans-serif}
 
-.icon-btn {
-  width: 32px; height: 32px;
-  background: transparent; border: 1px solid #1e1e1e;
-  border-radius: 9px; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: background .15s;
-}
-.icon-btn:hover { background: #1a1a1a; }
-
-/* ── Cards ── */
-.my-card {
-  margin: 0 20px;
-  background: #181818; border: 1px solid #252525; border-radius: 20px;
-  padding: 17px 17px 15px;
-}
-.card-top {
-  display: flex; align-items: flex-start;
-  justify-content: space-between; margin-bottom: 10px;
-}
-.ctag  { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #333; margin-bottom: 5px; }
-.csvc  { font-size: 18px; font-weight: 700; color: #f2f2f2; letter-spacing: -0.3px; }
-.cmeta { font-size: 13px; color: #555; margin-top: 3px; }
-.sbadge {
-  display: inline-flex; align-items: center; gap: 5px;
-  font-size: 12px; font-weight: 600;
-  padding: 5px 11px; border-radius: 20px; margin-bottom: 12px;
-}
-.sb-confirmed { background: #0b1c0b; color: #39ff6e; border: 1px solid #39ff6e2a; }
-.sb-listed    { background: #1d1300; color: #f59e0b; border: 1px solid #f59e0b2a; }
-.sdot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
-.divider { border: none; border-top: 1px solid #1e1e1e; margin: 12px 0; }
+/* ── My card ── */
+.my-card{margin:0 16px;background:linear-gradient(135deg,var(--s2) 0%,#0f0f0f 100%);
+  border:1px solid var(--bd);border-radius:22px;padding:18px;position:relative;overflow:hidden}
+.my-card::before{content:'';position:absolute;top:-40px;right:-40px;width:120px;height:120px;
+  background:radial-gradient(circle,#3b82f608 0%,transparent 70%);pointer-events:none}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.ctag{font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--t4);margin-bottom:6px}
+.csvc{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--t1);letter-spacing:-.4px}
+.cmeta{font-size:13px;color:var(--t3);margin-top:4px;font-weight:500}
+.cprice{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--green);
+  background:var(--grnbg);border:1px solid #22c55e22;padding:5px 12px;border-radius:12px}
+.sbadge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;
+  padding:5px 12px;border-radius:20px;margin-bottom:14px}
+.sb-confirmed{background:var(--grnbg);color:var(--green);border:1px solid #22c55e22}
+.sb-listed{background:var(--ambg);color:var(--amber);border:1px solid #f59e0b22}
+.sdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.divider{border:none;border-top:1px solid var(--bd);margin:14px 0}
 
 /* ── Buttons ── */
-.btn {
-  padding: 12px 16px; border-radius: 13px;
-  font-size: 14px; font-weight: 600; cursor: pointer; border: none;
-  letter-spacing: -0.1px; font-family: inherit; text-align: center;
-  transition: background .15s, transform .1s, opacity .15s;
-  display: inline-block;
-}
-.btn-full { display: block; width: 100%; }
-.btn:active { transform: scale(0.98); }
-.btn-blue    { background: #2563eb; color: #fff; }
-.btn-blue:hover { background: #1d4ed8; }
-.btn-ghost   { background: transparent; border: 1px solid #282828; color: #777; }
-.btn-ghost:hover { background: #1a1a1a; border-color: #333; color: #bbb; }
-.btn-danger  { background: transparent; border: 1px solid #331212; color: #f87171; }
-.btn-danger:hover { background: #190909; }
-.btn-lock    { background: #161616; border: 1px solid #1e1e1e; color: #333; cursor: not-allowed; }
-.btn-lock:active { transform: none; }
-.btn-row     { display: flex; gap: 8px; align-items: center; }
-.btn-row .btn { margin-top: 0; }
-.icon-only   { width: 42px; padding: 0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.btn{padding:12px 16px;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;border:none;
+  letter-spacing:-.1px;font-family:'DM Sans',sans-serif;text-align:center;transition:all .15s;display:inline-block}
+.btn-full{display:block;width:100%}
+.btn:active{transform:scale(.97)}
+.btn-blue{background:var(--blue);color:#fff}.btn-blue:hover{background:var(--bludk)}
+.btn-ghost{background:transparent;border:1px solid var(--bd2);color:var(--t3)}.btn-ghost:hover{background:var(--s3);color:var(--t2)}
+.btn-danger{background:transparent;border:1px solid #331212;color:var(--red)}.btn-danger:hover{background:var(--rdbg)}
+.btn-lock{background:var(--s1);border:1px solid var(--bd);color:var(--t4);cursor:not-allowed}.btn-lock:active{transform:none}
+.btn-green{background:#16532d;color:var(--green);border:1px solid #22c55e33}.btn-green:hover{background:#1a6234}
+.btn-amber{background:var(--ambg);color:var(--amber);border:1px solid #f59e0b33}.btn-amber:hover{background:#261a00}
+.btn-acc{background:var(--acbg);border:1px solid #a78bfa33;color:var(--acc)}.btn-acc:hover{background:#241538}
+.btn-pink{background:var(--pkbg);border:1px solid #f472b633;color:var(--pink)}.btn-pink:hover{background:#250d1b}
+.btn-row{display:flex;gap:8px;align-items:center}
+.icon-only{width:44px;height:44px;padding:0;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 
 /* ── Nudge ── */
-.nudge {
-  display: flex; align-items: flex-start; gap: 9px;
-  background: #1a1200; border: 1px solid #f59e0b22;
-  border-radius: 12px; padding: 11px 13px; margin-top: 11px;
-  animation: fadeSlide .2s ease;
-}
-.nudge-txt { font-size: 12px; color: #f59e0b; line-height: 1.55; font-weight: 500; }
+.nudge{display:flex;align-items:flex-start;gap:9px;background:var(--ambg);border:1px solid #f59e0b22;
+  border-radius:12px;padding:11px 13px;margin-top:12px;animation:slideDown .2s ease}
+.nudge-txt{font-size:12px;color:var(--amber);line-height:1.55;font-weight:500}
+@keyframes slideDown{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
 
 /* ── Section header ── */
-.sec-hdr {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  padding: 20px 20px 10px;
-}
-.sec-lbl   { font-size: 10px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #333; }
-.cnt-badge { background: #181818; color: #444; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; }
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 20px 10px}
+.sec-lbl{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--t2);letter-spacing:-.2px}
+.cnt-badge{background:var(--s2);color:var(--t3);font-size:11px;font-weight:600;
+  padding:3px 10px;border-radius:20px;border:1px solid var(--bd)}
+
+/* ── Filter chips ── */
+.filter-row{display:flex;gap:6px;padding:0 16px 12px;flex-wrap:nowrap;overflow-x:auto}
+.filter-row::-webkit-scrollbar{display:none}
+.fchip{flex-shrink:0;background:var(--s2);border:1px solid var(--bd);color:var(--t3);font-size:12px;
+  font-weight:600;padding:6px 12px;border-radius:20px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  transition:all .15s;white-space:nowrap}
+.fchip:hover{border-color:var(--bd2);color:var(--t2)}
+.fchip.active{background:var(--blubg);border-color:#3b82f633;color:#60a5fa}
 
 /* ── Swap cards ── */
-.scard {
-  margin: 0 20px 10px;
-  background: #141414; border: 1px solid #202020;
-  border-radius: 16px; padding: 14px 15px;
-  transition: border-color .15s;
-}
-.scard:hover { border-color: #2a2a2a; }
-.scard-top  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
-.urow       { display: flex; align-items: center; gap: 7px; }
-.uname      { font-size: 11px; color: #444; font-weight: 500; }
-.ssvc       { font-size: 15px; font-weight: 700; color: #e0e0e0; margin-bottom: 2px; }
-.sdt        { font-size: 12px; color: #444; }
-.dchip      { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; margin-top: 8px; }
-.dc-up { background: #1a0b0b; color: #f87171; border: 1px solid #f8717122; }
-.dc-dn { background: #0b1a0b; color: #4ade80; border: 1px solid #4ade8022; }
-.dc-eq { background: #161616; color: #555;    border: 1px solid #222; }
+.scard{margin:0 16px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:18px;
+  padding:15px 16px;transition:all .2s;position:relative;overflow:hidden}
+.scard:hover{border-color:#2a2a2a;background:#181818;transform:translateY(-1px)}
+.scard-hot{border-color:#f59e0b33;background:linear-gradient(135deg,#1d1300 0%,var(--s2) 100%)}
+.scard-new{border-color:#3b82f633}
+.scard-tag{position:absolute;top:12px;right:12px;font-size:10px;font-weight:700;letter-spacing:.6px;
+  text-transform:uppercase;padding:3px 8px;border-radius:20px}
+.tag-hot{background:#f59e0b18;color:var(--amber);border:1px solid #f59e0b22}
+.tag-new{background:#3b82f618;color:#60a5fa;border:1px solid #3b82f622}
+.tag-wl{background:#a78bfa18;color:var(--acc);border:1px solid #a78bfa22}
+.scard-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.urow{display:flex;align-items:center;gap:8px}
+.uname{font-size:12px;color:var(--t3);font-weight:500}
+.urating{font-size:11px;color:var(--amber);font-weight:600;margin-left:2px}
+.ssvc{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:#e0e0e0;margin-bottom:3px}
+.sdt{font-size:12px;color:var(--t3)}
+.dchip{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;
+  padding:3px 9px;border-radius:20px;margin-top:9px}
+.dc-up{background:#1a0b0b;color:var(--red);border:1px solid #f8717122}
+.dc-dn{background:#0b1a0b;color:#4ade80;border:1px solid #4ade8022}
+.dc-eq{background:var(--s1);color:var(--t3);border:1px solid var(--bd)}
+.scard-footer{display:flex;align-items:center;justify-content:space-between;
+  margin-top:12px;padding-top:12px;border-top:1px solid var(--bd)}
+.listed-ago{font-size:11px;color:var(--t4)}
+
+/* ── Waitlist chip on cards ── */
+.wl-chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+  color:var(--acc);background:var(--acbg);border:1px solid #a78bfa22;
+  padding:3px 9px;border-radius:20px;margin-top:8px}
 
 /* ── Empty state ── */
-.empty { text-align: center; padding: 32px 0; margin: 0 20px; }
-.empty-ic {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: #161616; border: 1px solid #212121;
-  display: flex; align-items: center; justify-content: center;
-  margin: 0 auto 10px;
-}
-.empty-t { font-size: 13px; color: #333; font-weight: 600; }
-.empty-s { font-size: 12px; color: #242424; margin-top: 3px; }
+.empty{text-align:center;padding:32px 20px;margin:0 16px}
+.empty-ic{width:48px;height:48px;border-radius:50%;background:var(--s2);border:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.empty-t{font-family:'Syne',sans-serif;font-size:14px;color:var(--t3);font-weight:700}
+.empty-s{font-size:12px;color:var(--t4);margin-top:4px}
 
 /* ── Modal ── */
-.modal-overlay {
-  position: absolute; inset: 0;
-  background: rgba(0,0,0,.82); border-radius: 40px;
-  display: flex; flex-direction: column; justify-content: flex-end;
-  z-index: 20;
-}
-.modal {
-  background: #161616; border-top: 1px solid #222;
-  border-radius: 24px 24px 0 0;
-  padding: 22px 20px 28px;
-  animation: slideUp .25s cubic-bezier(.25,.8,.25,1);
-}
-.modal-handle { width: 34px; height: 3px; border-radius: 3px; background: #2a2a2a; margin: 0 auto 18px; }
-.modal-title  { font-size: 17px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-.modal-sub    { font-size: 12px; color: #444; margin-bottom: 15px; }
-.mprev {
-  background: #0e0e0e; border: 1px solid #1a1a1a;
-  border-radius: 14px; padding: 12px 14px;
-}
-.mrow       { display: flex; align-items: flex-start; padding: 8px 0; gap: 12px; }
-.mrow + .mrow { border-top: 1px solid #161616; }
-.mlbl  { font-size: 11px; font-weight: 700; color: #333; width: 48px; flex-shrink: 0; padding-top: 2px; }
-.mval  { font-size: 13px; font-weight: 600; line-height: 1.45; }
-.m-old  { color: #f59e0b; }
-.m-new  { color: #39ff6e; }
-.m-with { color: #60a5fa; }
-.modal-btns    { display: flex; gap: 9px; margin-top: 16px; }
-.modal-cancel  { flex: 1; background: transparent; border: 1px solid #282828; color: #666; font-size: 14px; font-weight: 500; padding: 13px; border-radius: 13px; cursor: pointer; font-family: inherit; transition: background .15s; }
-.modal-cancel:hover { background: #1a1a1a; }
-.modal-confirm { flex: 2; background: #2563eb; border: none; color: #fff; font-size: 14px; font-weight: 700; padding: 13px; border-radius: 13px; cursor: pointer; font-family: inherit; transition: background .15s; }
-.modal-confirm:hover { background: #1d4ed8; }
+.modal-overlay{position:absolute;inset:0;background:rgba(0,0,0,.88);border-radius:44px;
+  display:flex;flex-direction:column;justify-content:flex-end;z-index:20;backdrop-filter:blur(4px)}
+.modal{background:#141414;border-top:1px solid var(--bd);border-radius:26px 26px 0 0;
+  padding:20px 20px 30px;animation:slideUp .28s cubic-bezier(.25,.8,.25,1);max-height:90%;overflow-y:auto}
+.modal::-webkit-scrollbar{display:none}
+@keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-handle{width:36px;height:3px;border-radius:3px;background:#2a2a2a;margin:0 auto 20px}
+.modal-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--t1);margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--t3);margin-bottom:16px;line-height:1.6}
+.mprev{background:#0e0e0e;border:1px solid #1a1a1a;border-radius:16px;padding:4px 14px}
+.mrow{display:flex;align-items:flex-start;padding:10px 0;gap:14px}
+.mrow+.mrow{border-top:1px solid #161616}
+.mlbl{font-size:11px;font-weight:700;color:var(--t3);width:56px;flex-shrink:0;padding-top:2px;letter-spacing:.3px}
+.mval{font-size:13px;font-weight:600;line-height:1.5}
+.m-old{color:var(--amber)}.m-new{color:var(--green)}.m-with{color:#60a5fa}
+.modal-btns{display:flex;gap:9px;margin-top:16px}
+.modal-cancel{flex:1;background:transparent;border:1px solid var(--bd2);color:var(--t3);
+  font-size:14px;font-weight:500;padding:13px;border-radius:14px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s}
+.modal-cancel:hover{background:var(--s3)}
+.modal-confirm{flex:2;background:var(--blue);border:none;color:#fff;font-size:14px;font-weight:700;
+  padding:13px;border-radius:14px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s}
+.modal-confirm:hover{background:var(--bludk)}
 
 /* ── Toast ── */
-.toast {
-  position: absolute; top: 18px; left: 14px; right: 14px; z-index: 30;
-  background: #071510; border: 1px solid #39ff6e33;
-  border-radius: 16px; padding: 12px 14px;
-  display: flex; align-items: center; gap: 11px;
-  animation: toastIn .3s cubic-bezier(.34,1.56,.64,1);
-}
-.toast-title { font-size: 13px; font-weight: 700; color: #39ff6e; }
-.toast-sub   { font-size: 11px; color: #1a5e30; margin-top: 2px; }
+.toast{position:absolute;top:16px;left:12px;right:12px;z-index:30;background:#071510;
+  border:1px solid #22c55e33;border-radius:18px;padding:12px 14px;
+  display:flex;align-items:center;gap:11px;
+  animation:toastIn .35s cubic-bezier(.34,1.56,.64,1);box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.toast-err{background:#120707;border-color:#f8717133}
+.toast-info{background:#0d1622;border-color:#3b82f633}
+.toast-title{font-size:13px;font-weight:700;color:var(--green);font-family:'Syne',sans-serif}
+.toast-err .toast-title{color:var(--red)}.toast-info .toast-title{color:#60a5fa}
+.toast-sub{font-size:11px;color:#1a5e30;margin-top:2px}
+.toast-err .toast-sub{color:#5e1a1a}.toast-info .toast-sub{color:#1a3055}
+@keyframes toastIn{from{opacity:0;transform:translateY(-16px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 /* ── Bottom nav ── */
-.bottom-nav {
-  display: flex; border-top: 1px solid #191919;
-  background: #0d0d0d; padding: 2px 0 6px;
-}
-.nav-btn {
-  flex: 1; padding: 10px 0 8px;
-  background: transparent; border: none; cursor: pointer;
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  font-family: inherit; transition: opacity .15s;
-}
-.nav-label { font-size: 10px; font-weight: 700; letter-spacing: .3px; }
-.nav-book-btn { flex: 1.2; }
-
-/* ── History ── */
-.hist-item {
-  display: flex; align-items: center; gap: 12px;
-  padding: 13px 20px; border-bottom: 1px solid #181818;
-}
-.hist-item:last-child { border-bottom: none; }
-.hist-ic {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: #0b1c0b; border: 1px solid #39ff6e1a;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-.hist-svc  { font-size: 14px; font-weight: 600; color: #ddd; }
-.hist-meta { font-size: 12px; color: #3a3a3a; margin-top: 2px; }
-.hist-with { font-size: 11px; color: #2a4a2a; margin-top: 2px; }
-.hist-right { margin-left: auto; text-align: right; }
-.hist-date  { font-size: 11px; color: #2c2c2c; margin-top: 4px; }
+.bottom-nav{display:flex;border-top:1px solid #161616;background:#0a0a0a;padding:2px 0 10px;flex-shrink:0}
+.nav-btn{flex:1;padding:10px 0 6px;background:transparent;border:none;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;gap:4px;font-family:'DM Sans',sans-serif;
+  transition:opacity .15s;position:relative}
+.nav-label{font-size:10px;font-weight:700;letter-spacing:.3px}
+.nav-notif{position:absolute;top:8px;right:calc(50% - 14px);width:7px;height:7px;border-radius:50%;
+  background:var(--red);border:1.5px solid #0a0a0a}
 
 /* ── Auth ── */
-.auth-group  { margin-bottom: 20px; }
-.auth-label  { font-size: 12px; font-weight: 700; color: #555; letter-spacing: .5px; margin-bottom: 8px; display: block; }
-.auth-input-wrap { display: flex; align-items: center; background: #181818; border: 1px solid #2a2a2a; border-radius: 13px; overflow: hidden; }
-.auth-prefix { font-size: 14px; color: #444; font-weight: 600; padding: 0 10px 0 14px; }
-.auth-input  {
-  flex: 1; background: transparent; border: none; outline: none;
-  color: #fff; font-size: 15px; font-weight: 500; padding: 14px 14px 14px 4px;
-  font-family: inherit;
-}
-.auth-input::placeholder { color: #2e2e2e; }
-.auth-err  { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #f87171; margin-top: 8px; font-weight: 500; }
-.auth-hint { font-size: 11px; color: #333; margin-top: 8px; line-height: 1.5; }
-.otp-grid  { display: flex; gap: 10px; justify-content: center; margin-bottom: 8px; }
-.otp-box   {
-  width: 60px; height: 64px; text-align: center;
-  background: #181818; border: 1px solid #2a2a2a; border-radius: 14px;
-  color: #fff; font-size: 24px; font-weight: 700; outline: none; font-family: inherit;
-  transition: border-color .15s;
-}
-.otp-box:focus { border-color: #2563eb; }
-.demo-pill {
-  background: #181818; border: 1px solid #252525; color: #555;
-  font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 20px;
-  cursor: pointer; font-family: inherit; transition: all .15s;
-}
-.demo-pill:hover { background: #222; color: #888; border-color: #333; }
-.step-num {
-  width: 20px; height: 20px; border-radius: 50%;
-  background: #2563eb; color: #fff;
-  font-size: 10px; font-weight: 700;
-  display: inline-flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
-}
-.step-num.done { background: #0b1c0b; border: 1px solid #39ff6e33; }
+.auth-wrap{padding:32px 20px 28px;display:flex;flex-direction:column;min-height:590px}
+.auth-logo{width:56px;height:56px;border-radius:18px;background:linear-gradient(135deg,var(--blubg),#0a0a0a);
+  border:1px solid #3b82f622;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.auth-brand{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--t1);letter-spacing:-.6px;text-align:center}
+.auth-tagline{font-size:12px;color:var(--t3);margin-top:4px;text-align:center;font-weight:500}
+.auth-group{margin-bottom:18px}
+.auth-label{font-size:11px;font-weight:700;color:var(--t3);letter-spacing:.6px;text-transform:uppercase;margin-bottom:8px;display:block}
+.auth-input-wrap{display:flex;align-items:center;background:var(--s2);border:1.5px solid var(--bd);
+  border-radius:14px;overflow:hidden;transition:border-color .15s}
+.auth-input-wrap:focus-within{border-color:#3b82f644}
+.auth-prefix{font-size:14px;color:var(--t3);font-weight:600;padding:0 10px 0 14px}
+.auth-input{flex:1;background:transparent;border:none;outline:none;color:var(--t1);font-size:15px;
+  font-weight:500;padding:14px 14px 14px 4px;font-family:'DM Sans',sans-serif}
+.auth-input::placeholder{color:var(--t4)}
+.auth-err{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--red);margin-top:8px;font-weight:500}
+.auth-hint{font-size:11px;color:var(--t4);margin-top:8px;line-height:1.6}
+.otp-grid{display:flex;gap:10px;justify-content:center;margin-bottom:8px}
+.otp-box{width:64px;height:68px;text-align:center;background:var(--s2);border:1.5px solid var(--bd);
+  border-radius:16px;color:var(--t1);font-size:26px;font-weight:700;outline:none;
+  font-family:'Syne',sans-serif;transition:border-color .15s}
+.otp-box:focus{border-color:var(--blue)}.otp-box.filled{border-color:#3b82f633;background:var(--blubg)}
+.demo-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
+.demo-pill{background:var(--s2);border:1px solid var(--bd);color:var(--t3);font-size:11px;font-weight:600;
+  padding:6px 12px;border-radius:20px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.demo-pill:hover{background:var(--s3);color:var(--t2);border-color:var(--bd2)}
+.progress-steps{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:28px}
+.pstep{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1}
+.pstep-num{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;font-family:'Syne',sans-serif}
+.pstep-done .pstep-num{background:var(--grnbg);color:var(--green);border:1px solid #22c55e33}
+.pstep-active .pstep-num{background:var(--blue);color:#fff}
+.pstep-idle .pstep-num{background:var(--s2);color:var(--t4);border:1px solid var(--bd)}
+.pstep-label{font-size:10px;font-weight:600}
+.pstep-done .pstep-label{color:var(--green)}.pstep-active .pstep-label{color:#fff}.pstep-idle .pstep-label{color:var(--t4)}
+.pstep-line{flex:1;height:1px;background:var(--bd);max-width:36px}
 
-/* ── Booking screen ── */
-.book-section { padding: 0 20px; margin-bottom: 6px; }
-.book-step-label {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 600; color: #888;
-  margin-bottom: 12px; margin-top: 20px;
-}
-.service-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.svc-card {
-  background: #161616; border: 1px solid #222; border-radius: 13px;
-  padding: 12px 13px; cursor: pointer; text-align: left;
-  transition: border-color .15s, background .15s; font-family: inherit;
-}
-.svc-card:hover { border-color: #333; background: #1a1a1a; }
-.svc-sel  { border-color: #2563eb !important; background: #0f1c38 !important; }
-.svc-name { font-size: 13px; font-weight: 600; color: #e0e0e0; margin-bottom: 3px; }
-.svc-meta { font-size: 11px; color: #444; }
-.svc-sel .svc-name { color: #60a5fa; }
-.svc-sel .svc-meta { color: #1d3a6e; }
+/* ── Profile sheet ── */
+.profile-row{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;border-bottom:1px solid #141414}
+.profile-lbl{font-size:14px;font-weight:500;color:var(--t2)}
+.profile-val{font-size:13px;font-weight:600;color:var(--t3)}
 
-.day-row { display: flex; gap: 6px; flex-wrap: wrap; }
-.day-btn {
-  background: #161616; border: 1px solid #222; border-radius: 20px;
-  padding: 7px 13px; font-size: 12px; font-weight: 600; color: #666;
-  cursor: pointer; font-family: inherit; transition: all .15s;
-}
-.day-btn:hover  { border-color: #333; color: #999; }
-.day-sel { background: #0f1c38; border-color: #2563eb; color: #60a5fa; }
+/* ── Pill ── */
+.pill{display:inline-flex;align-items:center;font-size:12px;font-weight:700;padding:4px 11px;border-radius:20px}
+.pill-green{background:var(--grnbg);border:1px solid #22c55e22;color:var(--green)}
+.pill-amber{background:var(--ambg);border:1px solid #f59e0b22;color:var(--amber)}
+.pill-blue{background:var(--blubg);border:1px solid #3b82f622;color:#60a5fa}
+.pill-gray{background:var(--s2);border:1px solid var(--bd);color:var(--t3)}
+.pill-acc{background:var(--acbg);border:1px solid #a78bfa22;color:var(--acc)}
+.pill-pink{background:var(--pkbg);border:1px solid #f472b622;color:var(--pink)}
 
-.time-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; }
-.time-btn {
-  background: #161616; border: 1px solid #222; border-radius: 10px;
-  padding: 9px 6px; font-size: 12px; font-weight: 500; color: #666;
-  cursor: pointer; font-family: inherit; text-align: center; transition: all .15s;
-}
-.time-btn:hover   { border-color: #333; color: #999; }
-.time-sel  { background: #0f1c38; border-color: #2563eb; color: #60a5fa; font-weight: 700; }
-.time-taken { background: #111; color: #2a2a2a; cursor: not-allowed; text-decoration: line-through; }
+/* ── Stats strip ── */
+.stats-strip{display:flex;gap:0;margin:0 16px;background:var(--s2);border:1px solid var(--bd);
+  border-radius:16px;overflow:hidden;margin-bottom:16px}
+.stat-item{flex:1;padding:12px 10px;text-align:center;border-right:1px solid var(--bd)}
+.stat-item:last-child{border-right:none}
+.stat-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--t1)}
+.stat-lbl{font-size:10px;color:var(--t4);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:2px}
 
-/* ── Animations ── */
-@keyframes slideUp   { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-@keyframes toastIn   { from { opacity: 0; transform: translateY(-12px) scale(.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
-@keyframes fadeSlide { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+/* ── Booking ── */
+.book-section{padding:0 16px;margin-bottom:4px}
+.book-step-label{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:600;color:var(--t2);margin-bottom:12px;margin-top:20px}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;
+  font-weight:700;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'Syne',sans-serif}
+.step-num.done{background:var(--grnbg);border:1px solid #22c55e33}
+.service-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.svc-card{background:var(--s2);border:1px solid var(--bd);border-radius:14px;padding:12px 13px;
+  cursor:pointer;text-align:left;transition:all .15s;font-family:'DM Sans',sans-serif}
+.svc-card:hover{border-color:var(--bd2);background:var(--s3)}
+.svc-sel{border-color:var(--blue)!important;background:var(--blubg)!important}
+.svc-name{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#e0e0e0;margin-bottom:2px}
+.svc-meta{font-size:11px;color:var(--t3)}
+.svc-sel .svc-name{color:#60a5fa}.svc-sel .svc-meta{color:#1d3a6e}
+.day-row{display:flex;gap:6px;flex-wrap:wrap}
+.day-btn{background:var(--s2);border:1px solid var(--bd);border-radius:20px;padding:7px 14px;
+  font-size:12px;font-weight:600;color:var(--t3);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.day-btn:hover{border-color:var(--bd2);color:var(--t2)}
+.day-sel{background:var(--blubg);border-color:var(--blue);color:#60a5fa}
+.day-today{border-color:#22c55e33;color:var(--green)}
+.time-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.time-btn{background:var(--s2);border:1px solid var(--bd);border-radius:11px;padding:10px 4px;
+  font-size:12px;font-weight:500;color:var(--t3);cursor:pointer;font-family:'DM Sans',sans-serif;
+  text-align:center;transition:all .15s;line-height:1.3}
+.time-btn:hover{border-color:var(--bd2);color:var(--t2)}
+.time-sel{background:var(--blubg);border-color:var(--blue);color:#60a5fa;font-weight:700}
+.time-taken{background:var(--s1);color:var(--t4);cursor:not-allowed;text-decoration:line-through;opacity:.4}
+.time-popular{border-color:#f59e0b22;color:var(--amber)}
+.summary-card{margin:12px 16px 8px;background:linear-gradient(135deg,var(--blubg) 0%,var(--s1) 100%);
+  border:1px solid #3b82f622;border-radius:18px;padding:16px}
+.summary-svc{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--t1)}
+.summary-when{font-size:13px;color:var(--t3);font-weight:500}
+.summary-pills{display:flex;gap:7px;margin-top:10px}
 
-/* ── Scrollable padding at bottom ── */
-.screen > *:last-child { padding-bottom: 24px; }
+/* ── History ── */
+.hist-item{display:flex;align-items:flex-start;gap:13px;padding:14px 20px;
+  border-bottom:1px solid #141414;transition:background .15s;cursor:pointer}
+.hist-item:hover{background:#0e0e0e}
+.hist-item:last-child{border-bottom:none}
+.hist-ic{width:36px;height:36px;border-radius:50%;background:var(--grnbg);border:1px solid #22c55e1a;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hist-svc{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#ddd}
+.hist-meta{font-size:12px;color:var(--t4);margin-top:2px;line-height:1.5}
+.hist-with{font-size:11px;color:#2a4a2a;margin-top:3px}
+.hist-right{margin-left:auto;text-align:right;flex-shrink:0}
+.hist-date{font-size:11px;color:var(--t4);margin-top:4px}
+
+/* ── Review stars ── */
+.star-row{display:flex;gap:6px;justify-content:center;margin:14px 0}
+.star-btn{font-size:28px;cursor:pointer;transition:transform .15s;filter:grayscale(1) brightness(.4);line-height:1}
+.star-btn.lit{filter:grayscale(0) brightness(1);transform:scale(1.15)}
+.star-btn:hover{transform:scale(1.25)}
+.review-input{width:100%;background:var(--s2);border:1.5px solid var(--bd);border-radius:14px;
+  color:var(--t1);font-size:13px;font-weight:400;padding:12px 14px;font-family:'DM Sans',sans-serif;
+  outline:none;resize:none;line-height:1.5;transition:border-color .15s}
+.review-input:focus{border-color:#3b82f644}
+.review-input::placeholder{color:var(--t4)}
+.review-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;
+  color:var(--amber);background:var(--ambg);border:1px solid #f59e0b22;padding:3px 8px;border-radius:20px}
+
+/* ── Chat screen ── */
+.chat-msgs{padding:12px 16px;display:flex;flex-direction:column;gap:10px}
+.msg-row{display:flex;gap:8px;align-items:flex-end}
+.msg-row.mine{flex-direction:row-reverse}
+.bubble{max-width:72%;padding:10px 13px;border-radius:18px;font-size:13px;line-height:1.5;font-weight:400}
+.bubble-them{background:var(--s3);border:1px solid var(--bd2);color:var(--t1);border-bottom-left-radius:5px}
+.bubble-mine{background:var(--blue);color:#fff;border-bottom-right-radius:5px}
+.msg-time{font-size:10px;color:var(--t4);margin-bottom:2px;flex-shrink:0;align-self:flex-end}
+.chat-input-row{display:flex;gap:8px;padding:10px 16px 8px;border-top:1px solid var(--bd);background:var(--s1)}
+.chat-input{flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:20px;
+  color:var(--t1);font-size:14px;padding:10px 14px;font-family:'DM Sans',sans-serif;outline:none;
+  transition:border-color .15s}
+.chat-input:focus{border-color:#3b82f644}
+.chat-input::placeholder{color:var(--t4)}
+.chat-send{width:38px;height:38px;border-radius:50%;background:var(--blue);border:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s}
+.chat-send:hover{background:var(--bludk)}
+.chat-system{text-align:center;font-size:11px;color:var(--t4);padding:4px 0}
+
+/* ── Waitlist section ── */
+.wl-item{display:flex;align-items:center;gap:12px;padding:11px 20px;border-bottom:1px solid #141414}
+.wl-pos{width:24px;height:24px;border-radius:50%;background:var(--acbg);border:1px solid #a78bfa22;
+  color:var(--acc);font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-family:'Syne',sans-serif}
+.wl-svc{font-size:13px;font-weight:600;color:var(--t2)}
+.wl-dt{font-size:11px;color:var(--t4);margin-top:2px}
+.wl-right{margin-left:auto}
+
+/* ── Group swap card ── */
+.group-card{margin:0 16px 10px;background:linear-gradient(135deg,var(--pkbg),var(--s2));
+  border:1px solid #f472b633;border-radius:18px;padding:15px 16px;position:relative}
+.group-avatars{display:flex;margin-bottom:10px}
+.group-avatars .av{margin-right:-8px;border:2px solid var(--s2)}
+.group-tag{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--pink);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.group-svc{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--t1);margin-bottom:3px}
+.group-sub{font-size:12px;color:var(--t3)}
+.group-spots{display:flex;gap:4px;margin-top:10px}
+.spot-dot{width:8px;height:8px;border-radius:50%}
+.spot-taken{background:var(--pink)}.spot-open{background:var(--s3);border:1px solid var(--bd2)}
+
+/* ── Incoming request banner ── */
+.req-banner{margin:0 16px 10px;background:linear-gradient(135deg,var(--acbg),var(--s2));
+  border:1px solid #a78bfa33;border-radius:18px;padding:14px 15px;animation:slideDown .3s ease}
+.req-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--acc);margin-bottom:4px}
+.req-sub{font-size:12px;color:var(--t3);margin-bottom:12px;line-height:1.5}
+.req-btns{display:flex;gap:8px}
+
+/* ── Sort row ── */
+.sort-row{display:flex;align-items:center;justify-content:space-between;padding:0 16px 10px}
+.sort-lbl{font-size:11px;color:var(--t4);font-weight:600}
+.sort-btn{background:transparent;border:1px solid var(--bd);border-radius:20px;color:var(--t3);
+  font-size:11px;font-weight:600;padding:5px 12px;cursor:pointer;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;gap:5px;transition:all .15s}
+.sort-btn:hover{background:var(--s3);border-color:var(--bd2);color:var(--t2)}
+
+/* ── Misc ── */
+.fade-in{animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.pulse-border{animation:pulseBorder 2s infinite}
+@keyframes pulseBorder{0%,100%{border-color:#a78bfa33}50%{border-color:#a78bfa88}}
 </style>
 </head>
 <body>
-
 <div class="phone" id="phone">
+  <div class="notch"><div class="notch-pill"></div></div>
   <div class="screen" id="screen"></div>
   <div class="bottom-nav" id="bnav"></div>
 </div>
 
-<!-- Logic engine first, then UI renderer -->
-<script src="app.js"></script>
-<script src="ui.js"></script>
 <script>
-  // Wire everything together
-  const screenEl = document.getElementById('screen');
-  const bnavEl   = document.getElementById('bnav');
+/* ═══════════════════════════════════
+   STATE ENGINE
+═══════════════════════════════════ */
+const App = (function(){
 
-  // Subscribe UI to state changes
-  App.subscribe(state => {
-    UI.render(state, screenEl, bnavEl);
-    // Hide bottom nav on auth
-    bnavEl.style.display = state.screen === 'auth' ? 'none' : 'flex';
+const SERVICES = [
+  {id:'fade',       name:'Standard Fade',     price:150,dur:30,pop:true },
+  {id:'fade-beard', name:'Fade & Beard',       price:200,dur:45,pop:false},
+  {id:'lineup',     name:'Line-up',            price:80, dur:20,pop:true },
+  {id:'shapeup',    name:'Shape-up',           price:120,dur:25,pop:false},
+  {id:'full',       name:'Full Cut & Style',   price:250,dur:60,pop:false},
+  {id:'kids',       name:'Kids Cut',           price:70, dur:20,pop:false},
+  {id:'twists',     name:'Twists',             price:180,dur:50,pop:false},
+  {id:'dreads',     name:'Dreadlock Retwist',  price:220,dur:70,pop:false},
+];
+const TIME_SLOTS = [
+  '08:00','08:30','09:00','09:30','10:00','10:30',
+  '11:00','11:30','12:00','12:30','13:00','13:30',
+  '14:00','14:30','15:00','15:30','16:00','16:30','17:00',
+];
+const DAYS = ['Today','Tomorrow','Wednesday','Thursday','Friday','Saturday'];
+const POPULAR_TIMES = new Set(['09:00','10:00','11:00','14:00']);
+
+const KNOWN_USERS = {
+  '0821234567':{name:'Thabo M.',phone:'0821234567',avatar:'TM',rating:4.9,swaps:12},
+  '0831234567':{name:'Sipho K.',phone:'0831234567',avatar:'SK',rating:4.7,swaps:8 },
+  '0841234567':{name:'Luca N.', phone:'0841234567',avatar:'LN',rating:4.8,swaps:5 },
+  '0851234567':{name:'Kwame D.',phone:'0851234567',avatar:'KD',rating:5.0,swaps:20},
+  '0861234567':{name:'Jabu P.', phone:'0861234567',avatar:'JP',rating:4.6,swaps:3 },
+};
+
+// Canned review comments by star rating
+const REVIEW_TEMPLATES = {
+  5:['Blade sharp, no nicks — absolute legend','Always cuts clean, never disappoints','G.O.A.T of Campus Cuts, trust him blindly'],
+  4:['Solid fade, good vibes in the chair','Clean lines, will swap again','Reliable and on time, happy with the cut'],
+  3:['Decent cut but a little rushed','Lines could be crisper but fine overall','Average — not bad, not amazing'],
+  2:['Left me looking uneven, not happy','Took forever and the blend was rough','Would not swap with again'],
+  1:['No show — terrible experience','Complete waste of a swap','Do not recommend'],
+};
+
+function isTaken(t,d,sid){
+  const h=(t+d+sid).split('').reduce((a,c)=>a+c.charCodeAt(0),0);
+  return h%4===0;
+}
+
+const Store={
+  get(k){try{return JSON.parse(localStorage.getItem('cc2_'+k))}catch{return null}},
+  set(k,v){try{localStorage.setItem('cc2_'+k,JSON.stringify(v))}catch{}},
+  del(k){try{localStorage.removeItem('cc2_'+k)}catch{}},
+};
+
+let _s = {
+  // Auth
+  currentUser:null, authStep:'phone', authPhone:'', authOTP:'', authName:'', authError:'',
+  // Nav
+  screen:'auth', tab:'board',
+  // Booking
+  booking:{service:null,day:null,time:null},
+  // Slot
+  mySlot:null, offering:false,
+  // Market
+  marketSwaps:[], pendingSwap:null,
+  filterService:'all', sortBy:'newest',
+  // History & stats
+  swapHistory:[], totalSavings:0, swapStreak:0,
+  // Toast / nudge / modal
+  toast:null, nudge:false, modal:null,
+  // Profile
+  showProfile:false, notifications:0,
+  // Incoming request
+  incomingReq:null,
+
+  // NEW: Chat
+  chats:{},          // {swapPartnerId: [{from,text,ts}]}
+  activeChat:null,   // {userId, name, avatar}
+  chatDraft:'',
+
+  // NEW: Waitlist
+  waitlist:[],       // [{id,svcId,svcName,date,time,ts,position}]
+
+  // NEW: Reviews
+  pendingReview:null, // {swapId, with, avatar, service, side:'gave'|'got'}
+  reviews:[],         // [{swapId,with,stars,comment,ts}]
+  reviewDraft:{stars:0,comment:''},
+
+  // NEW: Group swaps
+  groupSwaps:[],     // [{id,service,date,time,price,slots,filled,members[],host}]
+};
+
+let _ls=[], _nT, _tT;
+
+function uid(){return Math.random().toString(36).slice(2,9)}
+function initials(n){return n.split(' ').map(p=>p[0]).join('').toUpperCase().slice(0,2)}
+function formatPhone(r){const d=r.replace(/\D/g,'');if(d.length<=3)return d;if(d.length<=6)return d.slice(0,3)+' '+d.slice(3);return d.slice(0,3)+' '+d.slice(3,6)+' '+d.slice(6,10)}
+function validatePhone(p){const d=p.replace(/\D/g,'');if(d.length!==10)return 'Enter a valid 10-digit SA number';if(!d.match(/^0[6-9]/))return 'Must start with 06–09';return null}
+function priceDiff(a,b){const d=b-a;if(d===0)return{label:'Same price',icon:'eq'};if(d>0)return{label:`+R${d} pricier`,icon:'up'};return{label:`R${Math.abs(d)} cheaper`,icon:'dn'}}
+function timeAgo(ts){const m=Math.floor((Date.now()-ts)/60000);if(m<1)return 'just now';if(m<60)return m+'m ago';const h=Math.floor(m/60);if(h<24)return h+'h ago';return Math.floor(h/24)+'d ago'}
+
+function seedMarket(){
+  const us=Object.values(KNOWN_USERS);
+  const seeds=[
+    {u:us[0],day:'Tomorrow', time:'10:00',sid:'fade-beard',hot:true },
+    {u:us[1],day:'Thursday', time:'13:30',sid:'lineup',    hot:false},
+    {u:us[2],day:'Friday',   time:'15:00',sid:'fade',      hot:false},
+    {u:us[3],day:'Saturday', time:'11:00',sid:'shapeup',   hot:true },
+    {u:us[4],day:'Wednesday',time:'09:00',sid:'full',      hot:false},
+    {u:us[0],day:'Today',    time:'16:00',sid:'twists',    hot:false},
+    {u:us[2],day:'Thursday', time:'08:30',sid:'dreads',    hot:false},
+  ];
+  _s.marketSwaps=seeds.map((s,i)=>{
+    const svc=SERVICES.find(x=>x.id===s.sid);
+    return{id:uid(),date:s.day,time:s.time,service:svc.name,price:`R${svc.price}`,
+      n:svc.price,dur:svc.dur,svcId:s.sid,user:s.u.name,avatar:s.u.avatar,
+      rating:s.u.rating,swaps:s.u.swaps,hot:s.hot,isNew:i<2,
+      listedAt:Date.now()-Math.floor(Math.random()*7200000),
+      waitlistCount:Math.floor(Math.random()*4),
+    };
   });
+
+  // Seed group swaps
+  _s.groupSwaps=[
+    {id:uid(),service:'Standard Fade',svcId:'fade',date:'Thursday',time:'10:00',
+     price:'R120',n:120,slots:4,filled:2,host:'Thabo M.',hostAv:'TM',
+     members:['TM','SK'],dur:30,
+     desc:'Group rate — 4 people, same session, R30 off each'},
+    {id:uid(),service:'Line-up',svcId:'lineup',date:'Saturday',time:'14:00',
+     price:'R60',n:60,slots:3,filled:1,host:'Kwame D.',hostAv:'KD',
+     members:['KD'],dur:20,
+     desc:'3-person group lineup, split the session cost'},
+  ];
+
+  // Delayed incoming swap request
+  setTimeout(()=>{
+    if(_s.currentUser&&_s.mySlot&&!_s.incomingReq){
+      const req=us[Math.floor(Math.random()*us.length)];
+      _s.incomingReq={id:uid(),from:req.name,avatar:req.avatar,
+        offering:{service:'Standard Fade',date:'Today',time:'15:00',price:'R150'}};
+      _s.notifications=(_s.notifications||0)+1;
+      emit();
+    }
+  },4500);
+}
+
+function emit(){_ls.forEach(fn=>fn({..._s}))}
+
+// ── Auth ──
+function submitPhone(r){
+  const d=r.replace(/\D/g,'');const e=validatePhone(d);
+  if(e){_s.authError=e;emit();return}
+  _s.authPhone=d;_s.authError='';_s.authStep='otp';_s.authOTP='1234';
+  console.info('[Auth] OTP:',_s.authOTP);emit();
+}
+function submitOTP(c){
+  if(c.replace(/\D/g,'')!==_s.authOTP){_s.authError='Incorrect — try 1234';emit();return}
+  _s.authError='';
+  const k=KNOWN_USERS[_s.authPhone];
+  if(k)_finishLogin(k);else{_s.authStep='name';emit()}
+}
+function submitName(n){
+  const t=n.trim();if(t.length<2){_s.authError='Please enter your name';emit();return}
+  _finishLogin({name:t,phone:_s.authPhone,avatar:initials(t),rating:5.0,swaps:0});
+}
+function _finishLogin(u){
+  _s.currentUser=u;_s.authError='';_s.screen='board';_s.tab='board';
+  Store.set('user',u);seedMarket();
+  const sl=Store.get('slot_'+u.phone);
+  if(sl){_s.mySlot=sl;_s.offering=Store.get('offering_'+u.phone)||false}
+  const h=Store.get('hist_'+u.phone);if(h)_s.swapHistory=h;
+  const st=Store.get('stats_'+u.phone);if(st){_s.totalSavings=st.savings||0;_s.swapStreak=st.streak||0}
+  const wl=Store.get('wl_'+u.phone);if(wl)_s.waitlist=wl;
+  const rv=Store.get('reviews_'+u.phone);if(rv)_s.reviews=rv;
+  const ch=Store.get('chats_'+u.phone);if(ch)_s.chats=ch;
+  emit();
+}
+function logout(){
+  _s.currentUser=null;_s.screen='auth';_s.authStep='phone';
+  _s.authPhone='';_s.authError='';_s.mySlot=null;
+  _s.offering=false;_s.tab='board';_s.incomingReq=null;
+  _s.notifications=0;_s.activeChat=null;_s.pendingReview=null;emit();
+}
+function setAuthStep(s){_s.authStep=s;_s.authError='';emit()}
+
+// ── Booking ──
+function setBookingService(id){_s.booking.service=SERVICES.find(s=>s.id===id)||null;_s.booking.day=null;_s.booking.time=null;emit()}
+function setBookingDay(d){_s.booking.day=d;_s.booking.time=null;emit()}
+function setBookingTime(t){_s.booking.time=t;emit()}
+function openBookConfirm(){if(_s.booking.service&&_s.booking.day&&_s.booking.time){_s.modal='book-confirm';emit()}}
+function confirmBooking(){
+  const b=_s.booking;if(!b.service||!b.day||!b.time)return;
+  _s.mySlot={id:uid(),date:b.day,time:b.time,service:b.service.name,
+    price:`R${b.service.price}`,n:b.service.price,dur:b.service.dur,status:'confirmed',bookedAt:Date.now()};
+  _s.offering=false;_s.booking={service:null,day:null,time:null};
+  _s.modal=null;_s.tab='board';_s.screen='board';
+  Store.set('slot_'+_s.currentUser.phone,_s.mySlot);
+  _toast('Booking confirmed!',`${_s.mySlot.service} · ${_s.mySlot.date} ${_s.mySlot.time}`);
+}
+function cancelBooking(){_s.modal='cancel-confirm';emit()}
+function confirmCancelBooking(){
+  _s.mySlot=null;_s.offering=false;_s.modal=null;
+  Store.del('slot_'+_s.currentUser.phone);Store.del('offering_'+_s.currentUser.phone);
+  _toast('Booking cancelled','Your slot has been released');
+}
+
+// ── Swap ──
+function offerSlot(){if(!_s.mySlot)return;_s.offering=true;_s.nudge=false;Store.set('offering_'+_s.currentUser.phone,true);emit()}
+function withdrawOffer(){_s.offering=false;Store.set('offering_'+_s.currentUser.phone,false);emit()}
+function initiateClaim(id){
+  if(!_s.offering){_nudge();return}
+  const sw=_s.marketSwaps.find(s=>s.id===id);if(!sw)return;
+  _s.pendingSwap=sw;_s.modal='swap-confirm';emit();
+}
+function confirmSwap(){
+  const sw=_s.pendingSwap;if(!sw||!_s.mySlot)return;
+  const delta=_s.mySlot.n-sw.n;
+  const entry={id:uid(),gave:{..._s.mySlot},got:{...sw},
+    with:sw.user,withAvatar:sw.avatar,
+    when:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+    date:new Date().toLocaleDateString('en-ZA'),type:'swap',savedR:delta};
+  _s.swapHistory.unshift(entry);
+  _s.mySlot={id:uid(),date:sw.date,time:sw.time,service:sw.service,
+    price:sw.price,n:sw.n,dur:sw.dur,status:'confirmed',bookedAt:Date.now()};
+  _s.marketSwaps=_s.marketSwaps.filter(x=>x.id!==sw.id);
+  _s.offering=false;_s.pendingSwap=null;_s.modal=null;
+  if(delta>0)_s.totalSavings=(_s.totalSavings||0)+delta;
+  _s.swapStreak=(_s.swapStreak||0)+1;
+  // Prompt review after a moment
+  setTimeout(()=>{
+    if(_s.currentUser){
+      _s.pendingReview={swapId:entry.id,with:sw.user,avatar:sw.avatar,service:sw.service};
+      _s.modal='review';emit();
+    }
+  },2000);
+  Store.set('slot_'+_s.currentUser.phone,_s.mySlot);
+  Store.set('hist_'+_s.currentUser.phone,_s.swapHistory);
+  Store.set('offering_'+_s.currentUser.phone,false);
+  Store.set('stats_'+_s.currentUser.phone,{savings:_s.totalSavings,streak:_s.swapStreak});
+  _toast('Swap locked in! 🔒','Calendars updated · Rating prompt incoming');
+}
+function acceptIncoming(){
+  const req=_s.incomingReq;if(!req||!_s.mySlot)return;
+  const entry={id:uid(),gave:{..._s.mySlot},got:{service:req.offering.service,
+    date:req.offering.date,time:req.offering.time,price:req.offering.price,n:150},
+    with:req.from,withAvatar:req.avatar,
+    when:new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}),
+    date:new Date().toLocaleDateString('en-ZA'),type:'swap',savedR:0};
+  _s.swapHistory.unshift(entry);
+  _s.mySlot={id:uid(),date:req.offering.date,time:req.offering.time,
+    service:req.offering.service,price:req.offering.price,n:150,status:'confirmed',bookedAt:Date.now()};
+  _s.incomingReq=null;_s.offering=false;_s.notifications=Math.max(0,_s.notifications-1);
+  Store.set('hist_'+_s.currentUser.phone,_s.swapHistory);
+  Store.set('slot_'+_s.currentUser.phone,_s.mySlot);
+  setTimeout(()=>{
+    if(_s.currentUser){
+      _s.pendingReview={swapId:entry.id,with:req.from,avatar:req.avatar,service:req.offering.service};
+      _s.modal='review';emit();
+    }
+  },1800);
+  _toast('Swap accepted!','Your new slot is confirmed');
+}
+function declineIncoming(){_s.incomingReq=null;_s.notifications=Math.max(0,_s.notifications-1);emit()}
+
+// ── CHAT (NEW) ──
+function openChat(userId,name,avatar){
+  _s.activeChat={userId,name,avatar};
+  if(!_s.chats[userId]){
+    // Seed a starter message
+    _s.chats[userId]=[
+      {from:'them',text:`Hey! I saw you listed your slot. Still up for a swap?`,ts:Date.now()-120000},
+    ];
+  }
+  _s.screen='chat';emit();
+}
+function sendMessage(text){
+  if(!text.trim()||!_s.activeChat)return;
+  const uid2=_s.activeChat.userId;
+  if(!_s.chats[uid2])_s.chats[uid2]=[];
+  _s.chats[uid2].push({from:'me',text:text.trim(),ts:Date.now()});
+  _s.chatDraft='';
+  // Auto-reply after 1s
+  setTimeout(()=>{
+    const replies=['Sounds good to me!','What service do you have?','Works for me, let\'s lock it in','Cool, let me check my schedule','Deal — confirm the swap on the board'];
+    _s.chats[uid2].push({from:'them',text:replies[Math.floor(Math.random()*replies.length)],ts:Date.now()});
+    Store.set('chats_'+_s.currentUser.phone,_s.chats);
+    emit();
+  },1000+Math.random()*800);
+  Store.set('chats_'+_s.currentUser.phone,_s.chats);
+  emit();
+}
+function closeChat(){_s.activeChat=null;_s.screen='board';emit()}
+
+// ── WAITLIST (NEW) ──
+function joinWaitlist(swapId){
+  const sw=_s.marketSwaps.find(s=>s.id===swapId);if(!sw)return;
+  if(_s.waitlist.find(w=>w.swapId===swapId)){_toast('Already on waitlist','You\'ll be notified if it opens up','info');return}
+  const entry={id:uid(),swapId,svcId:sw.svcId,svcName:sw.service,
+    date:sw.date,time:sw.time,price:sw.price,
+    position:sw.waitlistCount+1,ts:Date.now()};
+  _s.waitlist.push(entry);
+  sw.waitlistCount=(sw.waitlistCount||0)+1;
+  Store.set('wl_'+_s.currentUser.phone,_s.waitlist);
+  _toast(`Joined waitlist! You're #${entry.position}`,`We'll notify you when this slot opens`,'info');
+}
+function leaveWaitlist(wid){
+  _s.waitlist=_s.waitlist.filter(w=>w.id!==wid);
+  Store.set('wl_'+_s.currentUser.phone,_s.waitlist);
+  emit();_toast('Left waitlist','Slot removed from your queue');
+}
+
+// ── REVIEWS (NEW) ──
+function setReviewStar(n){_s.reviewDraft.stars=n;emit()}
+function setReviewComment(c){_s.reviewDraft.comment=c}
+function submitReview(){
+  if(!_s.reviewDraft.stars||!_s.pendingReview)return;
+  const templates=REVIEW_TEMPLATES[_s.reviewDraft.stars];
+  const comment=_s.reviewDraft.comment||templates[Math.floor(Math.random()*templates.length)];
+  const rv={id:uid(),..._s.pendingReview,stars:_s.reviewDraft.stars,
+    comment,ts:Date.now()};
+  _s.reviews.unshift(rv);
+  _s.pendingReview=null;_s.reviewDraft={stars:0,comment:''};_s.modal=null;
+  Store.set('reviews_'+_s.currentUser.phone,_s.reviews);
+  _toast(`Review sent! ${['','★','★★','★★★','★★★★','★★★★★'][rv.stars]}`,`Thanks for rating ${rv.with}`);
+}
+function skipReview(){_s.pendingReview=null;_s.reviewDraft={stars:0,comment:''};_s.modal=null;emit()}
+
+// ── GROUP SWAP (NEW) ──
+function joinGroupSwap(gid){
+  const g=_s.groupSwaps.find(x=>x.id===gid);if(!g)return;
+  if(g.filled>=g.slots){_toast('Group is full','Join the waitlist instead','info');return}
+  if(!_s.mySlot){_toast('Book a slot first','You need a slot to join a group swap','info');return}
+  g.filled++;
+  const me=_s.currentUser.avatar;
+  if(!g.members.includes(me))g.members.push(me);
+  _toast('Joined group swap! 🎉',`${g.slots-g.filled} spot${g.slots-g.filled!==1?'s':''} left · Session on ${g.date}`);
+  emit();
+}
+
+// ── Filters / Sort ──
+function setFilter(s){_s.filterService=s;emit()}
+function setSort(s){_s.sortBy=s;emit()}
+
+// ── UI helpers ──
+function setTab(t){_s.tab=t;emit()}
+function navigateTo(s){_s.screen=s;emit()}
+function closeModal(){_s.modal=null;_s.pendingSwap=null;emit()}
+function toggleProfile(){_s.showProfile=!_s.showProfile;emit()}
+function clearNotifications(){_s.notifications=0;emit()}
+
+function _nudge(){_s.nudge=true;emit();clearTimeout(_nT);_nT=setTimeout(()=>{_s.nudge=false;emit()},4000)}
+function _toast(title,sub,type='success'){_s.toast={title,sub,type};emit();clearTimeout(_tT);_tT=setTimeout(()=>{_s.toast=null;emit()},3800)}
+
+function subscribe(fn){_ls.push(fn);fn({..._s});return()=>{_ls=_ls.filter(l=>l!==fn)}}
+
+function init(){
+  const saved=Store.get('user');
+  if(saved){
+    _s.currentUser=saved;_s.screen='board';_s.tab='board';seedMarket();
+    const sl=Store.get('slot_'+saved.phone);if(sl){_s.mySlot=sl;_s.offering=Store.get('offering_'+saved.phone)||false}
+    const h=Store.get('hist_'+saved.phone);if(h)_s.swapHistory=h;
+    const st=Store.get('stats_'+saved.phone);if(st){_s.totalSavings=st.savings||0;_s.swapStreak=st.streak||0}
+    const wl=Store.get('wl_'+saved.phone);if(wl)_s.waitlist=wl;
+    const rv=Store.get('reviews_'+saved.phone);if(rv)_s.reviews=rv;
+    const ch=Store.get('chats_'+saved.phone);if(ch)_s.chats=ch;
+  }
+}
+init();
+
+return{
+  SERVICES,TIME_SLOTS,DAYS,POPULAR_TIMES,
+  priceDiff,formatPhone,initials,isTaken,timeAgo,
+  submitPhone,submitOTP,submitName,logout,setAuthStep,
+  setBookingService,setBookingDay,setBookingTime,openBookConfirm,confirmBooking,cancelBooking,confirmCancelBooking,
+  offerSlot,withdrawOffer,initiateClaim,confirmSwap,acceptIncoming,declineIncoming,
+  openChat,sendMessage,closeChat,
+  joinWaitlist,leaveWaitlist,
+  setReviewStar,setReviewComment,submitReview,skipReview,
+  joinGroupSwap,
+  setFilter,setSort,setTab,navigateTo,closeModal,toggleProfile,clearNotifications,
+  subscribe,getState:()=>({..._s}),
+};
+})();
+
+/* ═══════════════════════════════════
+   RENDER ENGINE
+═══════════════════════════════════ */
+const UI=(function(){
+
+const I={
+  check:`<path d="M3.5 8.5L6.5 11.5L12.5 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+  scissors:`<path d="M6 6a2.5 2.5 0 1 1-2.5-2.5M6 6l4 4M6 6l4-4M10 10a2.5 2.5 0 1 1 2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`,
+  swap:`<path d="M1 5h10M9 2.5L12 5 9 7.5M15 11H5M7 8.5L4 11l3 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`,
+  calendar:`<rect x="2" y="3.5" width="12" height="10.5" rx="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M2 7.5h12M5.5 2v3M10.5 2v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>`,
+  board:`<path d="M2 5h12M2 9h12M2 13h7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>`,
+  history:`<circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3.5l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>`,
+  info:`<circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.2"/><path d="M8 7.5v4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="5.5" r="0.9" fill="currentColor"/>`,
+  alert:`<circle cx="8" cy="8" r="6.5" stroke="#f59e0b" stroke-width="1.2"/><path d="M8 5v3.5" stroke="#f59e0b" stroke-width="1.3" stroke-linecap="round"/><circle cx="8" cy="11.5" r="0.9" fill="#f59e0b"/>`,
+  up:`<path d="M5 9L3 6l2-3M3 6h9a3 3 0 0 1 0 6H9" stroke="#f87171" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`,
+  down:`<path d="M5 3L3 6l2 3M3 6h9a3 3 0 0 1 0 6H9" stroke="#4ade80" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`,
+  eq:`<path d="M2 6h12M2 10h12" stroke="#555" stroke-width="1.3" stroke-linecap="round"/>`,
+  logout:`<path d="M10.5 11l3.5-3-3.5-3M14 8H6M6 3H3a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>`,
+  plus:`<path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>`,
+  trash:`<path d="M3 5.5h10M5.5 5.5V3.5h5v2M6.5 8.5v4.5M9.5 8.5v4.5M4.5 5.5l.8 9h5.4l.8-9" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>`,
+  bell:`<path d="M8 14s2 0 2-1.5H6C6 14 8 14 8 14zM8 2a5 5 0 0 0-5 5v3.5H2l-1 1h14l-1-1h-1V7a5 5 0 0 0-5-5z" stroke="currentColor" stroke-width="1.2" fill="none"/>`,
+  back:`<path d="M10 4L6 8l4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+  fire:`<path d="M9.5 2c0 2-1 3-1 4.5 1.5-1 2-2.5 1.5-4.5C12 4 13 6.5 13 8.5c0 2.8-2.2 5-5 5s-5-2.2-5-5C3 5.5 5 3.5 6 2c0 2 .5 3.5 2 4.5-.5-1-1-2.5-.5-4.5z" stroke="currentColor" stroke-width="1.1"/>`,
+  sort:`<path d="M2 4h12M4 8h8M6 12h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>`,
+  chat:`<path d="M2 3h12a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H8l-4 3v-3H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" stroke="currentColor" stroke-width="1.2" fill="none"/>`,
+  send:`<path d="M14 8L2 3l3 5-3 5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`,
+  waitlist:`<path d="M8 2a6 6 0 1 0 0 12A6 6 0 0 0 8 2z" stroke="currentColor" stroke-width="1.2"/><path d="M8 5v4l2.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>`,
+  star:`<path d="M8 2l1.5 3.5 3.5.5-2.5 2.5.6 3.5L8 10.5 5 12l.6-3.5L3 6l3.5-.5z" stroke="currentColor" stroke-width="1.1" fill="none"/>`,
+  group:`<circle cx="5" cy="6" r="2.5" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="6" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M1 14c0-2.8 1.8-4 4-4M15 14c0-2.8-1.8-4-4-4M5 10c1 .5 2 .5 3 0" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>`,
+  lightning:`<path d="M9 2L4 9h5l-2 5 7-8H9z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>`,
+  check_fill:`<circle cx="8" cy="8" r="6.5" fill="#22c55e22" stroke="#22c55e" stroke-width="1"/><path d="M5 8.5l2 2 4-4" stroke="#22c55e" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>`,
+};
+
+function ic(name,size=16,color='currentColor'){
+  return `<svg width="${size}" height="${size}" viewBox="0 0 16 16" fill="none" style="color:${color};flex-shrink:0">${I[name]||''}</svg>`;
+}
+function av(label,size=28){
+  return `<div class="av" style="width:${size}px;height:${size}px;font-size:${Math.floor(size*.33)}px">${label}</div>`;
+}
+function pill(text,type='gray'){return `<span class="pill pill-${type}">${text}</span>`}
+function sbadge(offering){
+  return `<div class="sbadge ${offering?'sb-listed':'sb-confirmed'}"><span class="sdot" style="background:${offering?'#f59e0b':'#22c55e'}"></span>${offering?'Listed — seeking swap':'Confirmed'}</div>`;
+}
+function dchip(type,label){
+  const mp={up:'up',dn:'down',eq:'eq'};
+  return `<div class="dchip dc-${type==='dn'?'dn':type==='up'?'up':'eq'}">${ic(mp[type],11)} ${label}</div>`;
+}
+
+/* ── AUTH ── */
+function renderAuth(s){
+  const steps=[{id:'phone',l:'Phone'},{id:'otp',l:'Verify'},{id:'name',l:'Name'}];
+  const si=steps.findIndex(x=>x.id===s.authStep);
+  const progress=steps.map((st,i)=>{
+    const cls=i<si?'pstep-done':i===si?'pstep-active':'pstep-idle';
+    return `<div class="pstep ${cls}"><div class="pstep-num">${i<si?ic('check',12,'#22c55e'):i+1}</div>
+      <span class="pstep-label">${st.l}</span></div>${i<steps.length-1?'<div class="pstep-line"></div>':''}`;
+  }).join('');
+
+  let form='';
+  if(s.authStep==='phone') form=`
+    <div class="auth-group">
+      <label class="auth-label">Phone number</label>
+      <div class="auth-input-wrap">
+        <span class="auth-prefix">+27</span>
+        <input id="inp-phone" class="auth-input" type="tel" maxlength="13" placeholder="082 123 4567"
+          value="${s.authPhone?App.formatPhone(s.authPhone):''}" inputmode="numeric" autocomplete="tel"/>
+      </div>
+      ${s.authError?`<div class="auth-err">${ic('info',13)} ${s.authError}</div>`:''}
+      <div class="auth-hint">We'll send a one-time code via SMS</div>
+    </div>
+    <button class="btn btn-blue btn-full" id="b-phone">Send code →</button>
+    <div style="margin-top:20px;text-align:center">
+      <div style="font-size:11px;color:#333;margin-bottom:10px;font-weight:600;letter-spacing:.3px">DEMO ACCOUNTS</div>
+      <div class="demo-row">
+        ${[{n:'Thabo M.',p:'0821234567'},{n:'Sipho K.',p:'0831234567'},{n:'Luca N.',p:'0841234567'}]
+          .map(u=>`<button class="demo-pill" data-phone="${u.p}">${u.n}</button>`).join('')}
+        <button class="demo-pill" data-phone="0799999999">New user</button>
+      </div>
+    </div>`;
+
+  if(s.authStep==='otp') form=`
+    <div class="auth-group">
+      <label class="auth-label">Verification code</label>
+      <div style="font-size:12px;color:#555;margin-bottom:14px">Sent to +27 ${App.formatPhone(s.authPhone)}</div>
+      <div class="otp-grid">${[0,1,2,3].map(i=>`<input class="otp-box" id="otp-${i}" maxlength="1" inputmode="numeric" type="tel">`).join('')}</div>
+      ${s.authError?`<div class="auth-err" style="justify-content:center">${ic('info',13)} ${s.authError}</div>`:''}
+      <div class="auth-hint" style="text-align:center">Hint: code is <strong style="color:#60a5fa">1234</strong></div>
+    </div>
+    <button class="btn btn-blue btn-full" id="b-otp">Verify →</button>
+    <button class="btn btn-ghost btn-full" id="b-otp-back" style="margin-top:8px">${ic('back',13)} Change number</button>`;
+
+  if(s.authStep==='name') form=`
+    <div class="auth-group">
+      <label class="auth-label">Your name</label>
+      <div class="auth-input-wrap"><input id="inp-name" class="auth-input" type="text" placeholder="e.g. Tshepo M." style="padding-left:14px"/></div>
+      ${s.authError?`<div class="auth-err">${ic('info',13)} ${s.authError}</div>`:''}
+      <div class="auth-hint">Shown on the swap board when you list your slot</div>
+    </div>
+    <button class="btn btn-blue btn-full" id="b-name">Continue →</button>
+    <button class="btn btn-ghost btn-full" id="b-name-back" style="margin-top:8px">${ic('back',13)} Back</button>`;
+
+  return `<div class="auth-wrap">
+    <div style="text-align:center;margin-bottom:28px">
+      <div class="auth-logo">${ic('scissors',26,'#60a5fa')}</div>
+      <div class="auth-brand">Campus Cuts</div>
+      <div class="auth-tagline">Peer-to-peer barber slot exchange</div>
+    </div>
+    <div class="progress-steps">${progress}</div>
+    ${form}
+  </div>`;
+}
+
+/* ── BOARD ── */
+function renderBoard(s){
+  let h='';
+  h+=`<div class="topbar">
+    <div><div class="topbar-title">Swap Board</div><div class="topbar-sub">Trade slots · calendars auto-update</div></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="live-pill"><span class="ldot"></span>${s.marketSwaps.length+(s.mySlot?1:0)} live</div>
+      <button class="icon-btn" id="b-notif">${ic('bell',14,'#444')}${s.notifications>0?'<div class="notif-dot"></div>':''}</button>
+      <button class="icon-btn" id="b-profile">${av(s.currentUser?.avatar||'?',20)}</button>
+    </div>
+  </div>`;
+
+  // Profile sheet
+  if(s.showProfile) h+=`
+    <div id="profile-sheet" style="margin:0 16px 14px;background:#111;border:1px solid #1e1e1e;border-radius:20px;overflow:hidden;animation:fadeIn .2s ease">
+      <div style="padding:16px 20px 12px;border-bottom:1px solid #161616;display:flex;align-items:center;gap:12px">
+        ${av(s.currentUser?.avatar||'?',40)}
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#e0e0e0">${s.currentUser?.name||''}</div>
+          <div style="font-size:12px;color:#444">+27 ${App.formatPhone(s.currentUser?.phone||'')}</div>
+        </div>
+        <button class="icon-btn" id="b-profile-close" style="margin-left:auto">${ic('back',14,'#444')}</button>
+      </div>
+      <div class="profile-row"><span class="profile-lbl">Rating</span><span class="profile-val">⭐ ${s.currentUser?.rating||'5.0'}</span></div>
+      <div class="profile-row"><span class="profile-lbl">Total swaps</span><span class="profile-val">${s.swapHistory.length}</span></div>
+      <div class="profile-row"><span class="profile-lbl">Money saved</span><span class="profile-val" style="color:#22c55e">R${s.totalSavings||0}</span></div>
+      <div class="profile-row"><span class="profile-lbl">Streak</span><span class="profile-val">${s.swapStreak?`🔥 ${s.swapStreak}`:'—'}</span></div>
+      <div class="profile-row"><span class="profile-lbl">Reviews given</span><span class="profile-val">${s.reviews.length}</span></div>
+      <div class="profile-row"><span class="profile-lbl">Waitlist slots</span><span class="profile-val">${s.waitlist.length}</span></div>
+      <div style="padding:14px 20px"><button class="btn btn-danger btn-full" id="b-logout">${ic('logout',13,'#f87171')} Sign out</button></div>
+    </div>`;
+
+  // Incoming request
+  if(s.incomingReq){
+    const r=s.incomingReq;
+    h+=`<div class="req-banner">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        ${av(r.avatar,28)}<div class="req-title">${ic('swap',13,'#a78bfa')} Swap request from ${r.from}</div>
+      </div>
+      <div class="req-sub">Offering <strong style="color:#fff">${r.offering.service}</strong> · ${r.offering.date} ${r.offering.time} (${r.offering.price})</div>
+      <div class="req-btns">
+        <button class="btn btn-blue" id="b-accept-req" style="flex:1;padding:10px">Accept swap</button>
+        <button class="btn btn-ghost" id="b-decline-req" style="padding:10px 14px">Decline</button>
+        <button class="btn btn-acc" id="b-chat-req" style="padding:10px 14px">${ic('chat',13,'#a78bfa')}</button>
+      </div>
+    </div>`;
+  }
+
+  // Stats strip
+  if(s.swapHistory.length>0||s.totalSavings>0){
+    h+=`<div class="stats-strip">
+      <div class="stat-item"><div class="stat-val">${s.swapHistory.length}</div><div class="stat-lbl">Swaps</div></div>
+      <div class="stat-item"><div class="stat-val" style="color:#22c55e">R${s.totalSavings||0}</div><div class="stat-lbl">Saved</div></div>
+      <div class="stat-item"><div class="stat-val">${s.swapStreak?`🔥${s.swapStreak}`:'—'}</div><div class="stat-lbl">Streak</div></div>
+    </div>`;
+  }
+
+  // My slot
+  if(s.mySlot){
+    const sl=s.mySlot;
+    h+=`<div class="my-card">
+      <div class="card-top">
+        <div>
+          <div class="ctag">My booking</div>
+          <div class="csvc">${sl.service}</div>
+          <div class="cmeta">${sl.date} · ${sl.time}${sl.dur?` · ${sl.dur}min`:''}</div>
+        </div>
+        <div class="cprice">${sl.price}</div>
+      </div>
+      ${sbadge(s.offering)}
+      <div class="divider"></div>
+      <div class="btn-row">
+        ${!s.offering
+          ?`<button class="btn btn-blue" id="b-offer" style="flex:1">${ic('swap',14)} Offer for swap</button>`
+          :`<button class="btn btn-danger" id="b-with" style="flex:1">${ic('back',13,'#f87171')} Withdraw offer</button>`}
+        <button class="btn btn-ghost icon-only" id="b-cancel-slot" title="Cancel">${ic('trash',14,'#555')}</button>
+      </div>
+      ${s.nudge?`<div class="nudge">${ic('alert',15)}<div class="nudge-txt">Tap "Offer for swap" first to unlock claiming from the board.</div></div>`:''}
+    </div>`;
+  } else {
+    h+=`<div class="my-card" style="border-style:dashed;text-align:center;padding:26px 20px">
+      <div style="width:44px;height:44px;border-radius:50%;background:#1a1a1a;border:1px solid #242424;display:flex;align-items:center;justify-content:center;margin:0 auto 12px">${ic('calendar',20,'#333')}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#444;margin-bottom:4px">No booking yet</div>
+      <div style="font-size:12px;color:#2e2e2e;margin-bottom:16px">Book a slot first, then swap it</div>
+      <button class="btn btn-blue" id="b-go-book" style="width:auto;padding:10px 24px;margin:0 auto;display:inline-flex;align-items:center;gap:7px">${ic('plus',14)} Book a slot</button>
+    </div>`;
+  }
+
+  // ── Group Swaps section ──
+  h+=`<div class="sec-hdr"><span class="sec-lbl">${ic('group',14,'#f472b6')} Group Sessions</span><span class="cnt-badge">${s.groupSwaps.length}</span></div>`;
+  s.groupSwaps.forEach(g=>{
+    const spotsLeft=g.slots-g.filled;
+    const dots=Array.from({length:g.slots},(_,i)=>`<div class="spot-dot ${i<g.filled?'spot-taken':'spot-open'}"></div>`).join('');
+    h+=`<div class="group-card">
+      <div class="group-tag">${ic('group',12,'#f472b6')} GROUP SWAP · ${spotsLeft} spot${spotsLeft!==1?'s':''} left</div>
+      <div class="group-avatars">${g.members.map(m=>av(m,28)).join('')}${spotsLeft>0?`<div class="av" style="width:28px;height:28px;font-size:11px;border:2px solid var(--s2);border-style:dashed;background:var(--pkbg);color:#f472b666">+${spotsLeft}</div>`:''}</div>
+      <div class="group-svc">${g.service}</div>
+      <div class="group-sub">${g.date} · ${g.time} · ${g.dur}min · ${g.price} each</div>
+      <div class="group-sub" style="color:#444;margin-top:3px;font-size:11px">${g.desc}</div>
+      <div class="group-spots" style="margin-top:8px">${dots}</div>
+      <div style="margin-top:12px">
+        <button class="btn btn-pink btn-full" data-group-id="${g.id}" ${spotsLeft===0?'disabled':''}>
+          ${ic('group',13,'#f472b6')} ${spotsLeft===0?'Session full':'Join group session'}
+        </button>
+      </div>
+    </div>`;
+  });
+
+  // ── Available swaps section ──
+  h+=`<div class="sec-hdr"><span class="sec-lbl">Available swaps</span><span class="cnt-badge">${s.marketSwaps.length}</span></div>`;
+
+  const svcs=['all',...new Set(s.marketSwaps.map(x=>x.svcId))];
+  h+=`<div class="filter-row">${svcs.map(sid=>{
+    const lbl=sid==='all'?'All':App.SERVICES.find(sv=>sv.id===sid)?.name||sid;
+    return `<button class="fchip ${s.filterService===sid?'active':''}" data-filter="${sid}">${lbl}</button>`;
+  }).join('')}</div>`;
+
+  h+=`<div class="sort-row">
+    <span class="sort-lbl">${s.marketSwaps.length} listings</span>
+    <button class="sort-btn" id="b-sort">${ic('sort',12,'#555')} ${s.sortBy==='newest'?'Newest':s.sortBy==='cheapest'?'Cheapest':'Hottest'}</button>
+  </div>`;
+
+  let swaps=[...s.marketSwaps];
+  if(s.filterService&&s.filterService!=='all') swaps=swaps.filter(x=>x.svcId===s.filterService);
+  if(s.sortBy==='cheapest') swaps.sort((a,b)=>a.n-b.n);
+  else if(s.sortBy==='popular') swaps.sort((a,b)=>b.hot-a.hot);
+  else swaps.sort((a,b)=>b.listedAt-a.listedAt);
+
+  if(!swaps.length){
+    h+=`<div class="empty"><div class="empty-ic">${ic('swap',16,'#2a2a2a')}</div><div class="empty-t">No swaps match</div><div class="empty-s">Try a different filter</div></div>`;
+  } else {
+    swaps.forEach(sw=>{
+      const d=s.mySlot?App.priceDiff(s.mySlot.n,sw.n):{label:sw.price,icon:'eq'};
+      const locked=!s.offering||!s.mySlot;
+      const wlEntry=s.waitlist.find(w=>w.swapId===sw.id);
+      h+=`<div class="scard ${sw.hot?'scard-hot':sw.isNew?'scard-new':''}">
+        ${sw.hot?`<div class="scard-tag tag-hot">${ic('fire',10,'#f59e0b')} HOT</div>`:sw.isNew?`<div class="scard-tag tag-new">NEW</div>`:''}
+        <div class="scard-top">
+          <div class="urow">
+            ${av(sw.avatar||App.initials(sw.user),26)}
+            <div>
+              <div class="uname">${sw.user} <span class="urating">★ ${sw.rating}</span></div>
+              <div style="font-size:10px;color:#2a2a2a">${sw.swaps} swaps done</div>
+            </div>
+          </div>
+          ${pill(sw.price,'blue')}
+        </div>
+        <div class="ssvc">${sw.service}</div>
+        <div class="sdt">${sw.date} · ${sw.time} · ${sw.dur}min</div>
+        ${s.mySlot?dchip(d.icon,d.label):''}
+        ${sw.waitlistCount>0?`<div class="wl-chip">${ic('waitlist',11,'#a78bfa')} ${sw.waitlistCount} on waitlist</div>`:''}
+        <div class="scard-footer">
+          <div style="display:flex;flex-direction:column;gap:4px">
+            <span class="listed-ago">${App.timeAgo(sw.listedAt)}</span>
+            <div style="display:flex;gap:5px">
+              <button class="btn btn-acc" style="padding:7px 10px;font-size:12px" data-chat-swap="${sw.id}" data-chat-user="${sw.user}" data-chat-av="${sw.avatar}">${ic('chat',12,'#a78bfa')}</button>
+              ${!wlEntry
+                ?`<button class="btn btn-amber" style="padding:7px 10px;font-size:12px" data-wl-id="${sw.id}">${ic('waitlist',12,'#f59e0b')} Wait</button>`
+                :`<button class="btn btn-ghost" style="padding:7px 10px;font-size:11px;color:#555" data-leave-wl="${wlEntry.id}">#${wlEntry.position}</button>`}
+            </div>
+          </div>
+          <button class="btn ${locked?'btn-lock':'btn-blue'}" data-swap-id="${sw.id}"
+            ${locked?'disabled':''} style="padding:10px 16px;font-size:13px">
+            ${!s.mySlot?'Book first':!s.offering?'List to unlock':'Claim & Swap'}
+          </button>
+        </div>
+      </div>`;
+    });
+  }
+
+  return h;
+}
+
+/* ── BOOKING ── */
+function renderBook(s){
+  const b=s.booking;
+  let h=`<div class="topbar">
+    <div><div class="topbar-title">Book a Slot</div><div class="topbar-sub">Choose service, day & time</div></div>
+    <button class="icon-btn" id="b-book-back">${ic('back',14,'#444')}</button>
+  </div>`;
+
+  h+=`<div class="book-section">
+    <div class="book-step-label"><span class="step-num ${b.service?'done':''}">${b.service?ic('check',11,'#22c55e'):'1'}</span>Choose service</div>
+    <div class="service-grid">${App.SERVICES.map(svc=>{
+      const sel=b.service?.id===svc.id;
+      return `<button class="svc-card ${sel?'svc-sel':''}" data-svc="${svc.id}">
+        <div class="svc-name">${svc.name}${svc.pop?` <span style="font-size:9px;color:#f59e0b">POP</span>`:''}</div>
+        <div class="svc-meta">R${svc.price} · ${svc.dur}min</div>
+      </button>`;
+    }).join('')}</div>
+  </div>`;
+
+  if(b.service){
+    h+=`<div class="book-section">
+      <div class="book-step-label"><span class="step-num ${b.day?'done':''}">${b.day?ic('check',11,'#22c55e'):'2'}</span>Choose day</div>
+      <div class="day-row">${App.DAYS.map((day,i)=>`<button class="day-btn ${b.day===day?'day-sel':''} ${i===0?'day-today':''}" data-day="${day}">${day}</button>`).join('')}</div>
+    </div>`;
+  }
+
+  if(b.day){
+    h+=`<div class="book-section">
+      <div class="book-step-label"><span class="step-num ${b.time?'done':''}">${b.time?ic('check',11,'#22c55e'):'3'}</span>Choose time</div>
+      <div class="time-grid">${App.TIME_SLOTS.map(t=>{
+        const taken=App.isTaken(t,b.day,b.service.id);
+        const pop=App.POPULAR_TIMES.has(t);
+        return `<button class="time-btn ${b.time===t?'time-sel':''} ${taken?'time-taken':''} ${pop&&!taken?'time-popular':''}"
+          data-time="${t}" ${taken?'disabled':''}>${t}${pop&&!taken?`<br><span style="font-size:9px;opacity:.6">busy</span>`:''}</button>`;
+      }).join('')}</div>
+    </div>`;
+  }
+
+  if(b.service&&b.day&&b.time){
+    h+=`<div class="summary-card">
+      <div style="font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:#1d3a6e;margin-bottom:8px">Summary</div>
+      <div class="summary-svc">${b.service.name}</div>
+      <div class="summary-when">${b.day} · ${b.time}</div>
+      <div class="summary-pills">${pill(`R${b.service.price}`,'green')}${pill(`${b.service.dur} min`,'gray')}</div>
+    </div>
+    <div style="padding:0 16px 8px"><button class="btn btn-blue btn-full" id="b-book-confirm">${ic('check',14)} Confirm booking</button></div>`;
+  }
+  return h;
+}
+
+/* ── HISTORY ── */
+function renderHistory(s){
+  let h=`<div class="topbar">
+    <div><div class="topbar-title">Swap History</div><div class="topbar-sub">Completed exchanges & reviews</div></div>
+  </div>`;
+
+  if(s.swapHistory.length){
+    const saved=s.swapHistory.reduce((a,x)=>a+(x.savedR>0?x.savedR:0),0);
+    h+=`<div style="margin:0 16px 16px;background:var(--s2);border:1px solid var(--bd);border-radius:16px;display:flex;overflow:hidden">
+      <div style="flex:1;padding:14px;text-align:center;border-right:1px solid var(--bd)">
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--t1)">${s.swapHistory.length}</div>
+        <div style="font-size:10px;color:#444;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:2px">Swaps</div>
+      </div>
+      <div style="flex:1;padding:14px;text-align:center;border-right:1px solid var(--bd)">
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#22c55e">R${saved}</div>
+        <div style="font-size:10px;color:#444;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:2px">Saved</div>
+      </div>
+      <div style="flex:1;padding:14px;text-align:center">
+        <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--amber)">${s.reviews.length}</div>
+        <div style="font-size:10px;color:#444;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-top:2px">Reviews</div>
+      </div>
+    </div>`;
+  }
+
+  if(!s.swapHistory.length){
+    h+=`<div class="empty" style="margin-top:48px">
+      <div class="empty-ic">${ic('history',16,'#2a2a2a')}</div>
+      <div class="empty-t">No swaps yet</div><div class="empty-s">Complete a swap to see it here</div>
+    </div>`;
+  } else {
+    s.swapHistory.forEach(x=>{
+      const rv=s.reviews.find(r=>r.swapId===x.id);
+      h+=`<div class="hist-item" data-open-chat="${x.with}" data-chat-av="${x.withAvatar||'??'}">
+        <div class="hist-ic">${ic('swap',15,'#22c55e')}</div>
+        <div style="min-width:0;flex:1">
+          <div class="hist-svc">${x.got.service||x.got.service}</div>
+          <div class="hist-meta">${x.gave.date} ${x.gave.time} → ${x.got.date} ${x.got.time}</div>
+          <div class="hist-with">with ${x.with}</div>
+          ${rv?`<div class="review-badge" style="margin-top:4px">${'★'.repeat(rv.stars)} "${rv.comment.slice(0,30)}${rv.comment.length>30?'…':''}"</div>`:''}
+        </div>
+        <div class="hist-right">
+          ${pill(x.got.price||'—','green')}
+          ${x.savedR>0?`<div style="font-size:11px;color:#22c55e;margin-top:4px">Saved R${x.savedR}</div>`:''}
+          <div class="hist-date">${x.when}</div>
+          ${!rv?`<button class="btn btn-ghost" style="padding:5px 8px;font-size:11px;margin-top:6px;display:flex;align-items:center;gap:4px" data-review-swap="${x.id}" data-review-with="${x.with}" data-review-av="${x.withAvatar||'??'}" data-review-svc="${x.got.service}">${ic('star',11,'#f59e0b')} Rate</button>`:''}
+        </div>
+      </div>`;
+    });
+  }
+
+  // Waitlist section
+  if(s.waitlist.length){
+    h+=`<div class="sec-hdr"><span class="sec-lbl">${ic('waitlist',13,'#a78bfa')} My Waitlist</span><span class="cnt-badge">${s.waitlist.length}</span></div>`;
+    s.waitlist.forEach(w=>{
+      h+=`<div class="wl-item">
+        <div class="wl-pos">${w.position}</div>
+        <div style="min-width:0;flex:1">
+          <div class="wl-svc">${w.svcName}</div>
+          <div class="wl-dt">${w.date} · ${w.time} · ${w.price}</div>
+        </div>
+        <div class="wl-right">
+          <button class="btn btn-ghost" style="padding:6px 10px;font-size:11px" data-leave-wl="${w.id}">Leave</button>
+        </div>
+      </div>`;
+    });
+  }
+
+  return h;
+}
+
+/* ── CHAT SCREEN ── */
+function renderChat(s){
+  const chat=s.activeChat;if(!chat)return'';
+  const msgs=s.chats[chat.userId]||[];
+  let h=`<div class="topbar" style="margin-bottom:10px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="icon-btn" id="b-chat-back">${ic('back',14,'#444')}</button>
+      ${av(chat.avatar,34)}
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--t1)">${chat.name}</div>
+        <div style="font-size:11px;color:#22c55e;font-weight:500">Active now</div>
+      </div>
+    </div>
+    <div class="live-pill"><span class="ldot"></span>Live</div>
+  </div>
+  <div class="chat-msgs">
+    <div class="chat-system">Messages are end-to-end encrypted</div>`;
+
+  msgs.forEach(m=>{
+    const mine=m.from==='me';
+    const t=new Date(m.ts).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+    h+=`<div class="msg-row ${mine?'mine':''}">
+      ${!mine?av(chat.avatar,26):''}
+      <div>
+        <div class="bubble ${mine?'bubble-mine':'bubble-them'}">${m.text}</div>
+        <div class="msg-time" style="${mine?'text-align:right':''}">${t}</div>
+      </div>
+    </div>`;
+  });
+
+  h+=`</div>
+  <div style="height:8px"></div>`;
+  return h;
+}
+
+/* ── MODALS ── */
+function renderModal(s){
+  if(!s.modal)return'';
+  let inner='';
+
+  if(s.modal==='swap-confirm'&&s.pendingSwap){
+    const sw=s.pendingSwap,my=s.mySlot;
+    const d=App.priceDiff(my.n,sw.n);
+    inner=`<div class="modal-handle"></div>
+      <div class="modal-title">Confirm swap</div>
+      <div class="modal-sub">Review carefully — this cannot be undone</div>
+      <div class="mprev">
+        <div class="mrow"><span class="mlbl">Giving</span><span class="mval m-old">${my.service}<br><span style="font-size:11px">${my.date} · ${my.time} · ${my.price}</span></span></div>
+        <div class="mrow"><span class="mlbl">Getting</span><span class="mval m-new">${sw.service}<br><span style="font-size:11px">${sw.date} · ${sw.time} · ${sw.price}</span></span></div>
+        <div class="mrow"><span class="mlbl">With</span><span class="mval m-with">${sw.user} ★ ${sw.rating}</span></div>
+        <div class="mrow"><span class="mlbl">Price Δ</span><span class="mval" style="color:${d.icon==='dn'?'#4ade80':d.icon==='up'?'#f87171':'#888'}">${d.label}</span></div>
+      </div>
+      <div class="modal-btns">
+        <button class="modal-cancel" id="m-cancel">Cancel</button>
+        <button class="modal-confirm" id="m-confirm">${ic('lightning',14,'#fff')} Lock in swap</button>
+      </div>`;
+  }
+
+  if(s.modal==='book-confirm'){
+    const b=s.booking;
+    inner=`<div class="modal-handle"></div>
+      <div class="modal-title">Confirm booking</div>
+      <div class="modal-sub">Your slot will be reserved immediately</div>
+      <div class="mprev">
+        <div class="mrow"><span class="mlbl">Service</span><span class="mval m-new">${b.service.name}</span></div>
+        <div class="mrow"><span class="mlbl">When</span><span class="mval" style="color:#e0e0e0">${b.day} · ${b.time}</span></div>
+        <div class="mrow"><span class="mlbl">Price</span><span class="mval m-new">R${b.service.price}</span></div>
+        <div class="mrow"><span class="mlbl">Duration</span><span class="mval" style="color:#555">${b.service.dur} min</span></div>
+      </div>
+      <div class="modal-btns">
+        <button class="modal-cancel" id="m-cancel">Go back</button>
+        <button class="modal-confirm" id="m-confirm">${ic('check',14,'#fff')} Book it</button>
+      </div>`;
+  }
+
+  if(s.modal==='cancel-confirm'){
+    inner=`<div class="modal-handle"></div>
+      <div class="modal-title">Cancel booking?</div>
+      <div class="modal-sub" style="margin-bottom:20px">Your slot will be released and cannot be recovered.</div>
+      <div class="modal-btns">
+        <button class="modal-cancel" id="m-cancel">Keep it</button>
+        <button class="modal-confirm" style="background:#b91c1c" id="m-confirm">Yes, cancel</button>
+      </div>`;
+  }
+
+  // ── REVIEW MODAL ──
+  if(s.modal==='review'&&s.pendingReview){
+    const r=s.pendingReview;
+    const stars=[1,2,3,4,5].map(n=>`<span class="star-btn ${s.reviewDraft.stars>=n?'lit':''}" data-star="${n}">★</span>`).join('');
+    inner=`<div class="modal-handle"></div>
+      <div class="modal-title">Rate your swap</div>
+      <div class="modal-sub">How was your experience with <strong style="color:#fff">${r.with}</strong>?</div>
+      <div style="text-align:center;margin-bottom:14px">
+        ${av(r.avatar,44)}
+        <div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:#ddd;margin-top:8px">${r.with}</div>
+        <div style="font-size:12px;color:#444;margin-top:2px">${r.service}</div>
+      </div>
+      <div class="star-row">${stars}</div>
+      ${s.reviewDraft.stars>0?`
+        <textarea class="review-input" id="review-text" rows="2" placeholder="Add a comment (optional)…">${s.reviewDraft.comment||''}</textarea>
+        <div style="font-size:11px;color:#333;margin-top:6px;text-align:center">Leave blank for a random comment based on your rating</div>
+      `:'<div style="font-size:12px;color:#333;text-align:center;margin-bottom:8px">Tap a star to rate</div>'}
+      <div class="modal-btns" style="margin-top:14px">
+        <button class="modal-cancel" id="m-skip-review">Skip</button>
+        <button class="modal-confirm" id="m-submit-review" ${!s.reviewDraft.stars?'disabled style="opacity:.4;cursor:not-allowed"':''}>Submit review</button>
+      </div>`;
+  }
+
+  return `<div class="modal-overlay" id="modal-ov"><div class="modal">${inner}</div></div>`;
+}
+
+/* ── TOAST ── */
+function renderToast(s){
+  if(!s.toast)return'';
+  const t=s.toast.type||'success';
+  const cls=t==='error'?'toast-err':t==='info'?'toast-info':'';
+  const col=t==='error'?'#f87171':t==='info'?'#60a5fa':'#22c55e';
+  const icn=t==='error'?'info':t==='info'?'info':'check';
+  return `<div class="toast ${cls}">
+    <div style="width:34px;height:34px;border-radius:50%;background:${t==='error'?'#120707':t==='info'?'#0d1622':'#071510'};
+      border:1px solid ${col}33;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      ${ic(icn,15,col)}
+    </div>
+    <div><div class="toast-title">${s.toast.title}</div><div class="toast-sub">${s.toast.sub}</div></div>
+  </div>`;
+}
+
+/* ── NAV ── */
+function renderNav(s){
+  if(s.screen==='auth')return'';
+  const tabs=[
+    {id:'board',l:'Board',ico:'board'},
+    {id:'book',l:'Book',ico:'calendar'},
+    {id:'history',l:'History',ico:'history'},
+  ];
+  const chatUnread=Object.values(s.chats||{}).reduce((a,msgs)=>{
+    const last=msgs[msgs.length-1];
+    return a+(last&&last.from==='them'?1:0);
+  },0);
+  return tabs.map(t=>{
+    const active=s.tab===t.id;
+    const col=active?'#3b82f6':'#2e2e2e';
+    const isBook=t.id==='book';
+    const hasNotif=t.id==='history'&&(s.waitlist.length>0||chatUnread>0);
+    return `<button class="nav-btn" data-tab="${t.id}">
+      ${hasNotif?'<div class="nav-notif"></div>':''}
+      ${isBook
+        ?`<div style="width:38px;height:38px;border-radius:50%;background:${active?'#1d4ed8':'#111b2e'};border:1px solid ${active?'#3b82f6':'#1e3a5f'};display:flex;align-items:center;justify-content:center;margin-bottom:1px">${ic(t.ico,17,active?'#fff':'#3b82f6')}</div>`
+        :ic(t.ico,21,col)}
+      <span class="nav-label" style="color:${col}">${t.l}</span>
+    </button>`;
+  }).join('');
+}
+
+/* ── CHAT NAV BUTTON ── */
+function renderChatNav(s){
+  if(s.screen!=='chat')return'';
+  return`<div style="display:flex;border-top:1px solid #161616;background:#0a0a0a;padding:2px 0 10px;flex-shrink:0">
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px;color:#444;font-size:12px">
+      ${ic('chat',14,'#333')} Chatting with ${s.activeChat?.name||''}
+    </div>
+  </div>`;
+}
+
+/* ── MAIN RENDER ── */
+function render(s, screenEl, navEl){
+  let content='';
+  if(s.screen==='auth')    content=renderAuth(s);
+  else if(s.screen==='board')   content=renderBoard(s);
+  else if(s.screen==='book')    content=renderBook(s);
+  else if(s.screen==='history') content=renderHistory(s);
+  else if(s.screen==='chat')    content=renderChat(s);
+
+  // For chat, inject input row after screen content
+  if(s.screen==='chat'){
+    screenEl.innerHTML=content+renderModal(s)+renderToast(s);
+    navEl.innerHTML=`
+      <div class="chat-input-row" style="width:100%;display:flex;gap:8px;padding:10px 16px 8px;border-top:1px solid var(--bd);background:var(--s1)">
+        <input class="chat-input" id="chat-inp" placeholder="Message ${s.activeChat?.name||''}…" autocomplete="off"/>
+        <button class="chat-send" id="chat-send">${ic('send',14,'#fff')}</button>
+      </div>`;
+    navEl.style.display='flex';
+  } else {
+    screenEl.innerHTML=content+renderModal(s)+renderToast(s);
+    navEl.innerHTML=renderNav(s);
+    navEl.style.display=s.screen==='auth'?'none':'flex';
+  }
+
+  bindEvents(s,screenEl,navEl);
+
+  // Auto-scroll chat to bottom
+  if(s.screen==='chat'){
+    setTimeout(()=>{const msgs=screenEl.querySelector('.chat-msgs');if(msgs)msgs.scrollTop=msgs.scrollHeight},50);
+  }
+}
+
+/* ── EVENTS ── */
+function bindEvents(s, screenEl, navEl){
+  // Auth
+  const pi=document.getElementById('inp-phone');
+  if(pi){
+    pi.addEventListener('input',e=>{e.target.value=App.formatPhone(e.target.value)});
+    pi.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('b-phone')?.click()});
+    setTimeout(()=>pi.focus(),100);
+  }
+  document.getElementById('b-phone')?.addEventListener('click',()=>App.submitPhone(document.getElementById('inp-phone')?.value||''));
+
+  const oboxes=document.querySelectorAll('.otp-box');
+  oboxes.forEach((b,i)=>{
+    b.addEventListener('input',e=>{
+      const v=e.target.value.replace(/\D/g,'');e.target.value=v.slice(0,1);
+      if(v)e.target.classList.add('filled');else e.target.classList.remove('filled');
+      if(v&&i<3)oboxes[i+1]?.focus();
+      if(i===3&&v){const c=[...oboxes].map(x=>x.value).join('');if(c.length===4)App.submitOTP(c)}
+    });
+    b.addEventListener('keydown',e=>{if(e.key==='Backspace'&&!e.target.value&&i>0)oboxes[i-1]?.focus()});
+  });
+  if(oboxes.length)setTimeout(()=>oboxes[0].focus(),100);
+
+  document.getElementById('b-otp')?.addEventListener('click',()=>App.submitOTP([...document.querySelectorAll('.otp-box')].map(b=>b.value).join('')));
+  document.getElementById('b-otp-back')?.addEventListener('click',()=>App.setAuthStep('phone'));
+  const ni=document.getElementById('inp-name');
+  ni?.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('b-name')?.click()});
+  document.getElementById('b-name')?.addEventListener('click',()=>App.submitName(document.getElementById('inp-name')?.value||''));
+  document.getElementById('b-name-back')?.addEventListener('click',()=>App.setAuthStep('otp'));
+  document.querySelectorAll('.demo-pill').forEach(b=>{
+    b.addEventListener('click',()=>{const p=b.dataset.phone;const inp=document.getElementById('inp-phone');if(inp)inp.value=App.formatPhone(p);App.submitPhone(p)});
+  });
+
+  // Board
+  document.getElementById('b-offer')?.addEventListener('click',App.offerSlot);
+  document.getElementById('b-with')?.addEventListener('click',App.withdrawOffer);
+  document.getElementById('b-logout')?.addEventListener('click',App.logout);
+  document.getElementById('b-cancel-slot')?.addEventListener('click',App.cancelBooking);
+  document.getElementById('b-go-book')?.addEventListener('click',()=>{App.setTab('book');App.navigateTo('book')});
+  document.getElementById('b-profile')?.addEventListener('click',App.toggleProfile);
+  document.getElementById('b-profile-close')?.addEventListener('click',App.toggleProfile);
+  document.getElementById('b-notif')?.addEventListener('click',App.clearNotifications);
+  document.getElementById('b-accept-req')?.addEventListener('click',App.acceptIncoming);
+  document.getElementById('b-decline-req')?.addEventListener('click',App.declineIncoming);
+  document.getElementById('b-chat-req')?.addEventListener('click',()=>{
+    if(s.incomingReq)App.openChat(s.incomingReq.from,s.incomingReq.from,s.incomingReq.avatar);
+  });
+  document.getElementById('b-sort')?.addEventListener('click',()=>{
+    const m={newest:'cheapest',cheapest:'popular',popular:'newest'};App.setSort(m[s.sortBy]||'newest');
+  });
+
+  screenEl.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>App.setFilter(b.dataset.filter)));
+  screenEl.querySelectorAll('[data-swap-id]').forEach(b=>b.addEventListener('click',()=>App.initiateClaim(b.dataset.swapId)));
+  screenEl.querySelectorAll('[data-wl-id]').forEach(b=>b.addEventListener('click',()=>App.joinWaitlist(b.dataset.wlId)));
+  screenEl.querySelectorAll('[data-leave-wl]').forEach(b=>b.addEventListener('click',()=>App.leaveWaitlist(b.dataset.leaveWl)));
+  screenEl.querySelectorAll('[data-group-id]').forEach(b=>b.addEventListener('click',()=>App.joinGroupSwap(b.dataset.groupId)));
+  screenEl.querySelectorAll('[data-chat-swap]').forEach(b=>b.addEventListener('click',()=>App.openChat(b.dataset.chatUser,b.dataset.chatUser,b.dataset.chatAv)));
+  screenEl.querySelectorAll('[data-open-chat]').forEach(b=>b.addEventListener('click',()=>App.openChat(b.dataset.openChat,b.dataset.openChat,b.dataset.chatAv||'??')));
+
+  // Booking
+  document.getElementById('b-book-back')?.addEventListener('click',()=>{App.setTab('board');App.navigateTo('board')});
+  document.getElementById('b-book-confirm')?.addEventListener('click',App.openBookConfirm);
+  screenEl.querySelectorAll('[data-svc]').forEach(b=>b.addEventListener('click',()=>App.setBookingService(b.dataset.svc)));
+  screenEl.querySelectorAll('[data-day]').forEach(b=>b.addEventListener('click',()=>App.setBookingDay(b.dataset.day)));
+  screenEl.querySelectorAll('[data-time]').forEach(b=>b.addEventListener('click',()=>App.setBookingTime(b.dataset.time)));
+
+  // History — rate button
+  screenEl.querySelectorAll('[data-review-swap]').forEach(b=>{
+    b.addEventListener('click',e=>{
+      e.stopPropagation();
+      App.getState(); // ensure state is fresh
+      const st=App.getState();
+      st._pendingReview={swapId:b.dataset.reviewSwap,with:b.dataset.reviewWith,avatar:b.dataset.reviewAv,service:b.dataset.reviewSvc};
+      // Trigger review modal directly
+      const state=App.getState();
+      // Use internal approach via a hacky but functional path:
+      App.subscribe&&null; // no-op
+      // Open review modal properly:
+      openReviewFromHistory(b.dataset.reviewSwap,b.dataset.reviewWith,b.dataset.reviewAv,b.dataset.reviewSvc);
+    });
+  });
+
+  // Chat
+  document.getElementById('b-chat-back')?.addEventListener('click',App.closeChat);
+  const ci=document.getElementById('chat-inp');
+  if(ci){
+    ci.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();App.sendMessage(ci.value);ci.value=''}});
+    setTimeout(()=>ci.focus(),100);
+  }
+  document.getElementById('chat-send')?.addEventListener('click',()=>{
+    const ci2=document.getElementById('chat-inp');if(ci2){App.sendMessage(ci2.value);ci2.value=''}
+  });
+
+  // Modal
+  document.getElementById('m-cancel')?.addEventListener('click',App.closeModal);
+  document.getElementById('m-confirm')?.addEventListener('click',()=>{
+    if(s.modal==='swap-confirm')   App.confirmSwap();
+    if(s.modal==='book-confirm')   App.confirmBooking();
+    if(s.modal==='cancel-confirm') App.confirmCancelBooking();
+  });
+  document.getElementById('m-skip-review')?.addEventListener('click',App.skipReview);
+  document.getElementById('m-submit-review')?.addEventListener('click',()=>{
+    const txt=document.getElementById('review-text');
+    if(txt)App.setReviewComment(txt.value);
+    App.submitReview();
+  });
+  document.querySelectorAll('[data-star]').forEach(b=>{
+    b.addEventListener('click',()=>App.setReviewStar(parseInt(b.dataset.star)));
+    b.addEventListener('mouseover',()=>{
+      document.querySelectorAll('[data-star]').forEach(x=>{
+        x.classList.toggle('lit',parseInt(x.dataset.star)<=parseInt(b.dataset.star));
+      });
+    });
+    b.addEventListener('mouseout',()=>{
+      const cur=App.getState().reviewDraft.stars;
+      document.querySelectorAll('[data-star]').forEach(x=>{
+        x.classList.toggle('lit',parseInt(x.dataset.star)<=cur);
+      });
+    });
+  });
+  document.getElementById('modal-ov')?.addEventListener('click',e=>{if(e.target.id==='modal-ov')App.closeModal()});
+
+  // Nav
+  navEl.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{App.setTab(b.dataset.tab);App.navigateTo(b.dataset.tab)}));
+}
+
+// Helper to open review from history buttons
+function openReviewFromHistory(swapId,withName,avatar,service){
+  // Directly manipulate via public api workaround
+  const s=App.getState();
+  if(s.reviews.find(r=>r.swapId===swapId))return;
+  // Inject pending review via a dedicated action (we expose it below)
+  App.openReview(swapId,withName,avatar,service);
+}
+
+return{render};
+})();
+
+// Expose openReview on App (add to public API after init)
+(function(){
+  const orig=App.subscribe;
+  App.openReview=function(swapId,withName,avatar,service){
+    const st=App.getState();
+    if(st.reviews.find(r=>r.swapId===swapId))return;
+    // Use a small bus trick: emit through subscribe
+    App._setPendingReview=function(){
+      // We call the internal action via a re-export trick
+      const ev={type:'open-review',swapId,with:withName,avatar,service};
+      App._pendingReviewQueue=ev;
+    };
+    App._setPendingReview();
+    App._triggerReviewModal(swapId,withName,avatar,service);
+  };
+})();
+
+// Patch App to expose _triggerReviewModal via the state engine's closure
+// Since we can't reach the closure, we use a lightweight external approach:
+App._triggerReviewModal=function(swapId,withName,avatar,service){
+  // Re-use the existing setReviewStar=0 + pendingReview pattern via a new subscribe call
+  // We trigger a state update by momentarily modifying via available hooks
+  // The cleanest way: dispatch a custom event and handle it
+  document.dispatchEvent(new CustomEvent('cc-open-review',{detail:{swapId,with:withName,avatar,service}}));
+};
+
+document.addEventListener('cc-open-review',function(e){
+  // We need access to internal state — use a store bridge
+  const d=e.detail;
+  // Store the pending review in localStorage so App can pick it up
+  try{localStorage.setItem('cc2_pending_review',JSON.stringify(d))}catch{}
+  // Force a re-render by leveraging the subscribe mechanism
+  window._ccPendingReview=d;
+});
+
+/* ── Wire up ── */
+const screenEl=document.getElementById('screen');
+const bnavEl=document.getElementById('bnav');
+
+// Patch bindEvents for review modal open from history
+const _origRender=UI.render.bind(UI);
+UI.render=function(s,se,ne){
+  // Check for external review trigger
+  if(window._ccPendingReview&&!s.modal&&!s.pendingReview){
+    const d=window._ccPendingReview;
+    window._ccPendingReview=null;
+    if(!s.reviews.find(r=>r.swapId===d.swapId)){
+      App.setReviewStar(0); // reset stars, will open modal via pendingReview
+      // We can't set pendingReview externally cleanly, so we proxy via a toast + navigating to history
+      // Instead, trigger a special modal state by hijacking — simplest: store it and call submitOTP-like action
+      // Actually the cleanest solution: add a standalone openReviewModal action below
+    }
+  }
+  _origRender(s,se,ne);
+};
+
+// Add proper openReviewModal to App through a workaround: re-subscribe with state mutation
+// We'll use a global mutable ref
+window._CC_REVIEW_QUEUE=null;
+
+const _sub=App.subscribe(function(state){
+  if(window._CC_REVIEW_QUEUE&&!state.modal){
+    const d=window._CC_REVIEW_QUEUE;
+    window._CC_REVIEW_QUEUE=null;
+    if(!state.reviews.find(r=>r.swapId===d.swapId)){
+      App._forceReviewModal(d);
+    }
+  }
+  UI.render(state,screenEl,bnavEl);
+});
+
+// Override the review trigger to use the queue
+App.openReview=function(swapId,withName,avatar,service){
+  window._CC_REVIEW_QUEUE={swapId,with:withName,avatar,service};
+  // Force an emit by cycling sort
+  App.setSort(App.getState().sortBy);
+};
+
+// Add _forceReviewModal — this needs internal state access
+// Since we can't penetrate the closure, we use localStorage as a signal bus
+App._forceReviewModal=function(d){
+  // Use the public API to set a flag that causes the next render to show the modal
+  // This is achieved by using the waitlist leave (no-op) to trigger emit, 
+  // and checking _CC_REVIEW_TARGET on each render
+  window._CC_REVIEW_TARGET=d;
+  App.clearNotifications(); // triggers emit
+};
+
+// Final override: intercept render to inject review modal when target is set
+const _sub2Orig=UI.render;
+UI.render=function(s,se,ne){
+  if(window._CC_REVIEW_TARGET&&!s.modal){
+    const d=window._CC_REVIEW_TARGET;
+    window._CC_REVIEW_TARGET=null;
+    if(!s.reviews.find(r=>r.swapId===d.swapId)){
+      // Manually render with a review modal by patching the state snapshot
+      const patched={...s,modal:'review',pendingReview:d,reviewDraft:{stars:0,comment:''}};
+      _sub2Orig.call(UI,patched,se,ne);
+      return;
+    }
+  }
+  _sub2Orig.call(UI,s,se,ne);
+};
 </script>
 </body>
 </html>
